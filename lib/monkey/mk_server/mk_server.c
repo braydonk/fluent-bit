@@ -378,6 +378,10 @@ void mk_server_loop_balancer(struct mk_server *server)
                         return;
                     }
 
+                    if (val == MK_SERVER_SIGNAL_START) {
+                        printf("MMMMM YUMMY START SIGNAL");
+                    }
+
                     if (val == MK_SERVER_SIGNAL_STOP) {
                         operation_flag = MK_FALSE;
 
@@ -633,20 +637,19 @@ static int mk_server_lib_notify_started(struct mk_server *server)
 {
     uint64_t val;
 
-    /* Check the channel is valid (enabled by library mode) */
-    if (server->lib_ch_manager[1] <= 0) {
+    /* Check the start channel is valid (enabled by library mode) */
+    if (server->lib_ch_start[1] <= 0) {
         return -1;
     }
 
     val = MK_SERVER_SIGNAL_START;
 
 #ifdef _WIN32
-    return send(server->lib_ch_manager[1], &val, sizeof(uint64_t), 0);
+    return send(server->lib_ch_start[1], &val, sizeof(uint64_t), 0);
 #else
-    return write(server->lib_ch_manager[1], &val, sizeof(uint64_t));
+    return write(server->lib_ch_start[1], &val, sizeof(uint64_t));
 #endif
 }
-
 
 void mk_server_loop(struct mk_server *server)
 {
