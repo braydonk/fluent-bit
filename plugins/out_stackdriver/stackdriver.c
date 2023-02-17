@@ -2270,6 +2270,8 @@ static void cb_stackdriver_flush(struct flb_event_chunk *event_chunk,
 #ifdef FLB_HAVE_METRICS
     char *name = (char *) flb_output_name(ctx->ins);
     uint64_t ts = cmt_time_now();
+    cmt_counter_inc(ctx->cmt_receive_task_total,
+                    ts, 1, (char *[]) {name});
 #endif
 
     /* Get upstream connection */

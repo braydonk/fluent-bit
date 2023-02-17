@@ -193,6 +193,7 @@ struct flb_stackdriver {
     struct cmt_counter *cmt_requests_total;
     struct cmt_counter *cmt_proc_records_total;
     struct cmt_counter *cmt_retried_records_total;
+    struct cmt_counter *cmt_receive_task_total;
 #endif
 
     /* plugin instance */
