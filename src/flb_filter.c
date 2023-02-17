@@ -95,6 +95,7 @@ void flb_filter_do(struct flb_input_chunk *ic,
 #ifdef FLB_HAVE_METRICS
     /* timestamp */
     ts = cmt_time_now();
+    name = (char *) flb_filter_name(f_ins);
 
     cmt_counter_inc(f_ins->cmt_proc_chunks, ts,
                     1, (char *[]) {name});
@@ -133,10 +134,6 @@ void flb_filter_do(struct flb_input_chunk *ic,
                                       i_ins,          /* input instance   */
                                       f_ins->context, /* filter priv data */
                                       config);
-
-#ifdef FLB_HAVE_METRICS
-            name = (char *) flb_filter_name(f_ins);
-#endif
 
             /* Override buffer just if it was modified */
             if (ret == FLB_FILTER_MODIFIED) {
