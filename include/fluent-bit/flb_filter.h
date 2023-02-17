@@ -87,6 +87,7 @@ struct flb_filter_instance {
      * --------
      */
     struct cmt *cmt;                      /* parent context               */
+    struct cmt_counter *cmt_proc_chunks;
     struct cmt_counter *cmt_add_records;  /* m: filter_add_records_total  */
     struct cmt_counter *cmt_drop_records; /* m: filter_drop_records_total */
 

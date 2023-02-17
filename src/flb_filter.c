@@ -96,6 +96,9 @@ void flb_filter_do(struct flb_input_chunk *ic,
     /* timestamp */
     ts = cmt_time_now();
 
+    cmt_counter_inc(f_ins->cmt_proc_chunks, ts,
+                    1, (char *[]) {name});
+
     /* Count number of incoming records */
     in_records = ic->added_records;
     pre_records = ic->total_records - in_records;
@@ -412,6 +415,13 @@ int flb_filter_init_all(struct flb_config *config)
         }
 
         /* Register generic filter plugin metrics */
+        ins->cmt_proc_chunks = cmt_counter_create(ins->cmt,
+                                                  "fluentbit", "filter",
+                                                  "proc_records_total",
+                                                  "Total number of processed chunks.",
+                                                  1, (char *[]) {"name"});
+        cmt_counter_set(ins->cmt_proc_chunks, ts, 0, 1, (char *[]) {name});
+
         ins->cmt_add_records = cmt_counter_create(ins->cmt,
                                                   "fluentbit", "filter",
                                                   "add_records_total",
