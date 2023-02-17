@@ -95,10 +95,6 @@ void flb_filter_do(struct flb_input_chunk *ic,
 #ifdef FLB_HAVE_METRICS
     /* timestamp */
     ts = cmt_time_now();
-    name = (char *) flb_filter_name(f_ins);
-
-    cmt_counter_inc(f_ins->cmt_proc_chunks, ts,
-                    1, (char *[]) {name});
 
     /* Count number of incoming records */
     in_records = ic->added_records;
@@ -108,6 +104,12 @@ void flb_filter_do(struct flb_input_chunk *ic,
     /* Iterate filters */
     mk_list_foreach(head, &config->filters) {
         f_ins = mk_list_entry(head, struct flb_filter_instance, _head);
+
+#ifdef FLB_HAVE_METRICS
+    name = (char *) flb_filter_name(f_ins);
+    cmt_counter_inc(f_ins->cmt_proc_chunks, ts,
+                    1, (char *[]) {name});
+#endif
         if (flb_router_match(ntag, tag_len, f_ins->match
 #ifdef FLB_HAVE_REGEX
         , f_ins->match_regex
