@@ -496,8 +496,7 @@ struct flb_stackdriver *flb_stackdriver_conf_create(struct flb_output_instance *
                                                       "fluentbit",
                                                       "stackdriver",
                                                       "receive_task_total",
-                                                      "Total number of tasks ",
-                                                      "received.",
+                                                      "Total number of tasks.",
                                                       1, (char *[]) {"name"});
 
     ctx->cmt_failed_requests = cmt_counter_create(ins->cmt,
