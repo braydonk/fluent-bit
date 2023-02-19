@@ -51,8 +51,6 @@
 #include <cmetrics/cmetrics.h>
 #include <cmetrics/cmt_counter.h>
 
-#include <stdio.h>
-
 #ifdef FLB_HAVE_REGEX
 #include <fluent-bit/flb_regex.h>
 #endif
@@ -497,8 +495,6 @@ static FLB_INLINE void output_pre_cb_flush(void)
     struct flb_out_flush_params *params;
     struct flb_out_flush_params persisted_params;
 
-    printf("%p callee starting", coro->callee);
-
     params = (struct flb_out_flush_params *) FLB_TLS_GET(out_flush_params);
     if (!params) {
         flb_error("[output] no co-routines params defined, unexpected");
@@ -514,12 +510,18 @@ static FLB_INLINE void output_pre_cb_flush(void)
      */
     coro = params->coro;
     persisted_params = *params;
-    
-    printf("%p switch to caller", coro->callee);
 
+    struct flb_input_instance *ins = persisted_params.i_ins;
+    char *name = (char *) flb_input_name(ins);
+    uint64_t ts = cmt_time_now();
+
+    cmt_counter_inc(ins->cmt_out_caller_switch, ts,
+                    1, (char *[]) {name});
+    
     co_switch(coro->caller);
 
-    printf("%p callee resumed", coro->callee);
+    cmt_counter_inc(ins->cmt_out_callee_resume, ts,
+                    1, (char *[]) {name});
 
     /* Continue, we will resume later */
     out_p = persisted_params.out_plugin;
