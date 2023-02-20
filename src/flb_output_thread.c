@@ -26,6 +26,9 @@
 #include <fluent-bit/flb_output_thread.h>
 #include <fluent-bit/flb_thread_pool.h>
 
+#include <cmetrics/cmetrics.h>
+#include <cmetrics/cmt_counter.h>
+
 static pthread_once_t local_thread_instance_init = PTHREAD_ONCE_INIT;
 FLB_TLS_DEFINE(struct flb_out_thread_instance, local_thread_instance);
 
@@ -188,6 +191,7 @@ static void output_thread(void *data)
 
     ins = th_ins->ins;
     thread_id = th_ins->th->id;
+    char *name = (char *) flb_input_name(ins);
 
     flb_coro_thread_init();
 
@@ -248,15 +252,21 @@ static void output_thread(void *data)
         mk_event_wait(th_ins->evl);
         flb_event_priority_live_foreach(event, th_ins->evl_bktq, th_ins->evl,
                                       FLB_ENGINE_LOOP_MAX_ITER) {
+            uint64_t ts = cmt_time_now();
+            cmt_counter_inc(ins->cmt_evl_event, ts,
+                            2, (char *[]) {name, "ev_present"})
             /*
              * FIXME
              * -----
              * - handle return status by plugin flush callback.
              */
             if (event->type == FLB_ENGINE_EV_CORE) {
-
+                cmt_counter_inc(ins->cmt_evl_event, ts,
+                                2, (char *[]) {name, "ev_core"})
             }
             else if (event->type & FLB_ENGINE_EV_SCHED) {
+                cmt_counter_inc(ins->cmt_evl_event, cmt_time_now(),
+                                2, (char *[]) {name, "ev_sched"})
                 /*
                  * Note that this scheduler event handler has more features
                  * designed to be used from the parent thread, on this specific
@@ -266,6 +276,8 @@ static void output_thread(void *data)
                 flb_sched_event_handler(sched->config, event);
             }
             else if (event->type == FLB_ENGINE_EV_THREAD_OUTPUT) {
+                cmt_counter_inc(ins->cmt_evl_event, ts,
+                                2, (char *[]) {name, "ev_thread_output"})
                 /* Read the task reference */
                 n = flb_pipe_r(event->fd, &task, sizeof(struct flb_task *));
                 if (n <= 0) {
@@ -295,9 +307,13 @@ static void output_thread(void *data)
                 flb_coro_resume(out_flush->coro);
             }
             else if (event->type == FLB_ENGINE_EV_CUSTOM) {
+                cmt_counter_inc(ins->cmt_evl_event, ts,
+                                2, (char *[]) {name, "ev_custom"})
                 event->handler(event);
             }
             else if (event->type == FLB_ENGINE_EV_THREAD) {
+                cmt_counter_inc(ins->cmt_evl_event, ts,
+                                2, (char *[]) {name, "ev_thread"})
                 /*
                  * Check if we have some co-routine associated to this event,
                  * if so, resume the co-routine
@@ -309,6 +325,8 @@ static void output_thread(void *data)
                 }
             }
             else if (event->type == FLB_ENGINE_EV_OUTPUT) {
+                cmt_counter_inc(ins->cmt_evl_event, ts,
+                                2, (char *[]) {name, "ev_output"})
                 /*
                  * The flush callback has finished working and delivered it
                  * return status. At this intermediary step we cleanup the
@@ -319,6 +337,8 @@ static void output_thread(void *data)
                 handle_output_event(th_ins->config, ins->ch_events[1], event->fd);
             }
             else {
+                cmt_counter_inc(ins->cmt_evl_event, ts,
+                                2, (char *[]) {name, "ev_unrecognized"})
                 flb_plg_warn(ins, "unhandled event type => %i\n", event->type);
             }
         }

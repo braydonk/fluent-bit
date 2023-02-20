@@ -335,6 +335,8 @@ struct flb_output_instance {
     struct cmt_counter *cmt_retries_failed;  /* m: output_retries_failed  */
     struct cmt_counter *cmt_dropped_records; /* m: output_dropped_records */
     struct cmt_counter *cmt_retried_records; /* m: output_retried_records */
+    struct cmt_counter *cmt_evl_event;
+    struct cmt_counter *cmt_coro_steps;
 
     /* OLD Metrics API */
 #ifdef FLB_HAVE_METRICS
@@ -546,6 +548,12 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
     struct flb_output_flush *out_flush;
     struct flb_out_thread_instance *th_ins;
 
+    char *name = (char *) flb_input_name(o_ins);
+    uint64_t ts = cmt_time_now();
+
+    cmt_counter_inc(o_ins->cmt_coro_steps, ts,
+                    2, (char *[]) {name, "flush_create"})
+
     /* Custom output coroutine info */
     out_flush = (struct flb_output_flush *) flb_calloc(1, sizeof(struct flb_output_flush));
     if (!out_flush) {
@@ -559,6 +567,9 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
         flb_free(out_flush);
         return NULL;
     }
+
+    cmt_counter_inc(o_ins->cmt_coro_steps, ts,
+                    2, (char *[]) {name, "coro_create"})
 
     /*
      * Each co-routine receives an 'id', the value is always incremental up to
@@ -581,6 +592,9 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
         return NULL;
     }
 
+    cmt_counter_inc(o_ins->cmt_coro_steps, ts,
+                    2, (char *[]) {name, "coro_initialized"})
+
 #ifdef FLB_HAVE_VALGRIND
     coro->valgrind_stack_id = \
         VALGRIND_STACK_REGISTER(coro->callee, ((char *) coro->callee) + stack_size);
@@ -597,8 +611,14 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
         mk_list_add(&out_flush->_head, &o_ins->flush_list);
     }
 
+    cmt_counter_inc(o_ins->cmt_coro_steps, ts,
+                    2, (char *[]) {name, "add_flush_list"})
+
     /* Workaround for makecontext() */
     output_params_set(out_flush, coro, task, o_ins->p, o_ins->context, config);
+
+    cmt_counter_inc(o_ins->cmt_coro_steps, ts,
+                    2, (char *[]) {name, "params_set"})
     return out_flush;
 }
 

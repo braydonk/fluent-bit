@@ -925,6 +925,16 @@ int flb_output_init_all(struct flb_config *config)
                                              1, (char *[]) {"name"});
         cmt_counter_set(ins->cmt_retried_records, ts, 0, 1, (char *[]) {name});
 
+        ins->cmt_evl_event = cmt_counter_create(ins->cmt, "fluentbit",
+                                             "output", "evl_event",
+                                             "Number of times receiving event.",
+                                             2, (char *[]) {"name", "event"})
+
+        ins->cmt_coro_steps = cmt_counter_create(ins->cmt, "fluentbit",
+                                             "output", "coro_steps",
+                                             "Number of times coro step executed",
+                                             2, (char *[]) {"name", "step"})
+
         /* old API */
         ins->metrics = flb_metrics_create(name);
         if (ins->metrics) {
