@@ -191,7 +191,7 @@ static void output_thread(void *data)
 
     ins = th_ins->ins;
     thread_id = th_ins->th->id;
-    char *name = (char *) flb_input_name(ins);
+    char *name = (char *) flb_output_name(ins);
 
     flb_coro_thread_init();
 
@@ -265,7 +265,7 @@ static void output_thread(void *data)
                                 2, (char *[]) {name, "ev_core"});
             }
             else if (event->type & FLB_ENGINE_EV_SCHED) {
-                cmt_counter_inc(ins->cmt_evl_event, cmt_time_now(),
+                cmt_counter_inc(ins->cmt_evl_event, ts,
                                 2, (char *[]) {name, "ev_sched"});
                 /*
                  * Note that this scheduler event handler has more features
