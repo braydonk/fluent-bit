@@ -552,7 +552,7 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
     uint64_t ts = cmt_time_now();
 
     cmt_counter_inc(o_ins->cmt_coro_steps, ts,
-                    2, (char *[]) {name, "flush_create"})
+                    2, (char *[]) {name, "flush_create"});
 
     /* Custom output coroutine info */
     out_flush = (struct flb_output_flush *) flb_calloc(1, sizeof(struct flb_output_flush));
@@ -569,7 +569,7 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
     }
 
     cmt_counter_inc(o_ins->cmt_coro_steps, ts,
-                    2, (char *[]) {name, "coro_create"})
+                    2, (char *[]) {name, "coro_create"});
 
     /*
      * Each co-routine receives an 'id', the value is always incremental up to
@@ -593,7 +593,7 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
     }
 
     cmt_counter_inc(o_ins->cmt_coro_steps, ts,
-                    2, (char *[]) {name, "coro_initialized"})
+                    2, (char *[]) {name, "coro_initialized"});
 
 #ifdef FLB_HAVE_VALGRIND
     coro->valgrind_stack_id = \
@@ -612,13 +612,13 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
     }
 
     cmt_counter_inc(o_ins->cmt_coro_steps, ts,
-                    2, (char *[]) {name, "add_flush_list"})
+                    2, (char *[]) {name, "add_flush_list"});
 
     /* Workaround for makecontext() */
     output_params_set(out_flush, coro, task, o_ins->p, o_ins->context, config);
 
     cmt_counter_inc(o_ins->cmt_coro_steps, ts,
-                    2, (char *[]) {name, "params_set"})
+                    2, (char *[]) {name, "params_set"});
     return out_flush;
 }
 
