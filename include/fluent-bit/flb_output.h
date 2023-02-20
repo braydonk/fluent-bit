@@ -514,7 +514,7 @@ static FLB_INLINE void output_pre_cb_flush(void)
     persisted_params = *params;
 
     struct flb_input_instance *ins = persisted_params.i_ins;
-    char *name = (char *) flb_input_name(ins);
+    char *name = ins->name;
     uint64_t ts = cmt_time_now();
 
     cmt_counter_inc(ins->cmt_out_caller_switch, ts,
@@ -548,7 +548,7 @@ struct flb_output_flush *flb_output_flush_create(struct flb_task *task,
     struct flb_output_flush *out_flush;
     struct flb_out_thread_instance *th_ins;
 
-    char *name = (char *) flb_output_name(o_ins);
+    char *name = flb_output_name(o_ins);
     uint64_t ts = cmt_time_now();
 
     cmt_counter_inc(o_ins->cmt_coro_steps, ts,

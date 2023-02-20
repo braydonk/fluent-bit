@@ -191,7 +191,7 @@ static void output_thread(void *data)
 
     ins = th_ins->ins;
     thread_id = th_ins->th->id;
-    char *name = (char *) flb_output_name(ins);
+    char *name = ins->name;
 
     flb_coro_thread_init();
 
