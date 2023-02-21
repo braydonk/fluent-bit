@@ -405,9 +405,9 @@ int flb_output_thread_pool_flush(struct flb_task *task,
         return -1;
     }
 
-    snprintf(&tid, sizeof(tid)-1, "%i", th->id);
+    snprintf(tid, sizeof(tid)-1, "%i", th->id);
     cmt_counter_inc(out_ins->cmt_worker_rr, ts,
-                    2, (char *[]), {name, tid});
+                    2, (char *[]) {name, tid});
 
     th_ins = th->params.data;
 
@@ -422,7 +422,7 @@ int flb_output_thread_pool_flush(struct flb_task *task,
     }
 
     cmt_counter_inc(out_ins->cmt_assigned_worker, ts,
-                    2, (char *[]), {name, tid});
+                    2, (char *[]) {name, tid});
 
     return 0;
 }
