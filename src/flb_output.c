@@ -935,6 +935,21 @@ int flb_output_init_all(struct flb_config *config)
                                              "Number of times coro step executed",
                                              2, (char *[]) {"name", "step"});
 
+        ins->cmt_thread_pool_flush = cmt_counter_create(ins->cmt, "fluentbit",
+                                             "output", "thread_pool_flush",
+                                             "Number of times flushed to thread pool.",
+                                             1, (char *[]) {"name"});
+
+        ins->cmt_worker_rr = cmt_counter_create(ins->cmt, "fluentbit",
+                                             "output", "worker_rr",
+                                             "Number of times worker is chosen from rr.",
+                                             2, (char *[]) {"name", "tid"});
+
+        ins->cmt_assigned_worker = cmt_counter_create(ins->cmt, "fluentbit",
+                                             "output", "assigned_worker",
+                                             "Number of times worker is assigned task.",
+                                             2, (char *[]) {"name", "tid"});
+
         /* old API */
         ins->metrics = flb_metrics_create(name);
         if (ins->metrics) {

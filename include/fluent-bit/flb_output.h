@@ -337,6 +337,9 @@ struct flb_output_instance {
     struct cmt_counter *cmt_retried_records; /* m: output_retried_records */
     struct cmt_counter *cmt_evl_event;
     struct cmt_counter *cmt_coro_steps;
+    struct cmt_counter *cmt_thread_pool_flush;
+    struct cmt_counter *cmt_worker_rr;
+    struct cmt_counter *cmt_assigned_worker;
 
     /* OLD Metrics API */
 #ifdef FLB_HAVE_METRICS
