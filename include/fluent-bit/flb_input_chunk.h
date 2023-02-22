@@ -26,6 +26,9 @@
 #include <monkey/mk_core.h>
 #include <msgpack.h>
 
+#include <cmetrics/cmetrics.h>
+#include <cmetrics/cmt_counter.h>
+
 /*
  * This variable defines a 'hint' size for new Chunks created, this
  * value is passed to Chunk I/O.
