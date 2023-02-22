@@ -89,7 +89,7 @@ int flb_input_chunk_append_raw2(struct flb_input_instance *in,
                                 const char *tag, size_t tag_len,
                                 const void *buf, size_t buf_size);
 
-const void *flb_input_chunk_flush(struct flb_input_chunk *ic, size_t *size);
+const void *flb_input_chunk_flush(struct flb_input_chunk *ic, size_t *size, char *name, struct cmt_counter *counter);
 int flb_input_chunk_release_lock(struct flb_input_chunk *ic);
 flb_sds_t flb_input_chunk_get_name(struct flb_input_chunk *ic);
 int flb_input_chunk_get_event_type(struct flb_input_chunk *ic);
