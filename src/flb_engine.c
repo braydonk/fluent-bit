@@ -109,6 +109,10 @@ int flb_engine_flush(struct flb_config *config,
 
     mk_list_foreach(head, &config->inputs) {
         in = mk_list_entry(head, struct flb_input_instance, _head);
+
+        cmt_counter_inc(in->cmt_dispatch_steps, cmt_time_now(),
+                        2, (char *[]) {in->name, "start_flush"});
+
         p = in->p;
 
         if (in_force != NULL && p != in_force) {

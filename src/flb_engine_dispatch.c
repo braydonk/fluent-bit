@@ -30,6 +30,9 @@
 #include <fluent-bit/flb_task.h>
 #include <fluent-bit/flb_event.h>
 
+#include <cmetrics/cmetrics.h>
+#include <cmetrics/cmt_counter.h>
+
 
 /* It creates a new output thread using a 'Retry' context */
 int flb_engine_dispatch_retry(struct flb_task_retry *retry,
@@ -132,9 +135,16 @@ static int tasks_start(struct flb_input_instance *in,
     struct flb_task *task;
     struct flb_task_route *route;
     struct flb_output_instance *out;
+    uint64_t ts = cmt_time_now();
+    char *name = in->name;
+
+    cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                    2, (char *[]) {name, "start_tasks_start"});
 
     /* At this point the input instance should have some tasks linked */
     mk_list_foreach_safe(head, tmp, &in->tasks) {
+        cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                        2, (char *[]) {name, "tasks_iter"});
         task = mk_list_entry(head, struct flb_task, _head);
 
         if (mk_list_is_empty(&task->retries) != 0) {
@@ -145,10 +155,14 @@ static int tasks_start(struct flb_input_instance *in,
         if (task->status != FLB_TASK_NEW) {
             continue;
         }
+        cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                        2, (char *[]) {name, "set_task_running"});
         task->status = FLB_TASK_RUNNING;
 
         /* A task contain one or more routes */
         mk_list_foreach_safe(r_head, r_tmp, &task->routes) {
+            cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                            2, (char *[]) {name, "start_route_iter"});
             route = mk_list_entry(r_head, struct flb_task_route, _head);
 
             /*
@@ -181,12 +195,18 @@ static int tasks_start(struct flb_input_instance *in,
             }
 
             hits++;
+            
+            cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                            2, (char *[]) {name, "task_flush"});
 
             /*
              * We have the Task and the Route, created a thread context for the
              * data handling.
              */
             flb_output_task_flush(task, route->out, config);
+
+            cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                            2, (char *[]) {name, "task_flush_complete"});
 
             /*
             th = flb_output_thread(task,
@@ -232,6 +252,11 @@ int flb_engine_dispatch(uint64_t id, struct flb_input_instance *in,
     struct flb_input_plugin *p;
     struct flb_input_chunk *ic;
     struct flb_task *task = NULL;
+    uint64_t ts = cmt_time_now();
+    char *name = in->name;
+
+    cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                    2, (char *[]) {name, "start_dispatch"});
 
     p = in->p;
     if (!p) {
@@ -240,11 +265,16 @@ int flb_engine_dispatch(uint64_t id, struct flb_input_instance *in,
 
     /* Look for chunks ready to go */
     mk_list_foreach_safe(head, tmp, &in->chunks) {
+        cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                        2, (char *[]) {name, "start_chunk_iter"});
+
         ic = mk_list_entry(head, struct flb_input_chunk, _head);
         if (ic->busy == FLB_TRUE) {
             continue;
         }
 
+        cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                        2, (char *[]) {name, "get_chunk_buf"});
         /* There is a match, get the buffer */
         buf_data = flb_input_chunk_flush(ic, &buf_size);
         if (buf_size == 0) {
@@ -255,11 +285,16 @@ int flb_engine_dispatch(uint64_t id, struct flb_input_instance *in,
             flb_input_chunk_release_lock(ic);
             continue;
         }
+
+        cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                        2, (char *[]) {name, "check_buf_data"});
         if (!buf_data) {
             flb_input_chunk_release_lock(ic);
             continue;
         }
 
+        cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                        2, (char *[]) {name, "chunk_get_tag"});
         /* Get the the tag reference (chunk metadata) */
         ret = flb_input_chunk_get_tag(ic, &tag_buf, &tag_len);
         if (ret == -1) {
@@ -267,12 +302,16 @@ int flb_engine_dispatch(uint64_t id, struct flb_input_instance *in,
             continue;
         }
 
+        cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                        2, (char *[]) {name, "validate_tag_info"});
         /* Validate outgoing Tag information */
         if (!tag_buf || tag_len <= 0) {
             flb_input_chunk_release_lock(ic);
             continue;
         }
 
+        cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                        2, (char *[]) {name, "create_task"});
         /* Create a task */
         task = flb_task_create(id, buf_data, buf_size,
                                ic->in, ic,
@@ -286,12 +325,16 @@ int flb_engine_dispatch(uint64_t id, struct flb_input_instance *in,
              * later. So we just release it busy lock.
              */
             if (t_err == FLB_TRUE) {
+                cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                                2, (char *[]) {name, "release_lock"});
                 flb_input_chunk_release_lock(ic);
             }
             continue;
         }
     }
 
+    cmt_counter_inc(in->cmt_dispatch_steps, ts,
+                    2, (char *[]) {name, "tasks_start"});
     /* Start the new enqueued Tasks */
     tasks_start(in, config);
 
