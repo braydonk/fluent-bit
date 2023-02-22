@@ -624,8 +624,8 @@ int flb_input_instance_init(struct flb_input_instance *ins,
 
     ins->cmt_dispatch_steps = cmt_counter_create(ins->cmt,
                                                 "fluentbit", "input", "dispatch_steps",
-                                                "Number of times each step executes."
-                                                2, (char *[]) {"name", "step"})
+                                                "Number of times each step executes.",
+                                                2, (char *[]) {"name", "step"});
 
     /* OLD Metrics */
     ins->metrics = flb_metrics_create(name);
