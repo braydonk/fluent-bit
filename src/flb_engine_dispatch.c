@@ -66,7 +66,7 @@ int flb_engine_dispatch_retry(struct flb_task_retry *retry,
     }
 
     /* There is a match, get the buffer */
-    buf_data = (char *) flb_input_chunk_flush(task->ic, &buf_size);
+    buf_data = (char *) flb_input_chunk_flush(task->ic, &buf_size, NULL, NULL);
     if (!buf_data) {
         /* Could not retrieve chunk content */
         flb_error("[engine_dispatch] could not retrieve chunk content, removing retry");
@@ -276,7 +276,7 @@ int flb_engine_dispatch(uint64_t id, struct flb_input_instance *in,
         cmt_counter_inc(in->cmt_dispatch_steps, ts,
                         2, (char *[]) {name, "get_chunk_buf"});
         /* There is a match, get the buffer */
-        buf_data = flb_input_chunk_flush(ic, &buf_size);
+        buf_data = flb_input_chunk_flush(ic, &buf_size, name, in->cmt_get_chunk_steps);
         if (buf_size == 0) {
             /*
              * Do not release the buffer since if allocated, it will be

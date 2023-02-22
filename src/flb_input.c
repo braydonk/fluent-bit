@@ -627,6 +627,11 @@ int flb_input_instance_init(struct flb_input_instance *ins,
                                                 "Number of times each step executes.",
                                                 2, (char *[]) {"name", "step"});
 
+    ins->cmt_get_chunk_steps = cmt_counter_create(ins->cmt,
+                                                "fluentbit", "input", "get_chunk_steps",
+                                                "Steps of getting input chunk.",
+                                                2, (char *[]) {"name", "step"});
+
     /* OLD Metrics */
     ins->metrics = flb_metrics_create(name);
     if (ins->metrics) {

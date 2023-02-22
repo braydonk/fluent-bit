@@ -1601,21 +1601,40 @@ int flb_input_chunk_append_raw2(struct flb_input_instance *in,
 }
 
 /* Retrieve a raw buffer from a dyntag node */
-const void *flb_input_chunk_flush(struct flb_input_chunk *ic, size_t *size)
+const void *flb_input_chunk_flush(struct flb_input_chunk *ic, size_t *size, 
+                                  char *name, struct cmt_counter *counter)
 {
     int ret;
     size_t pre_size;
     size_t post_size;
     ssize_t diff_size;
     char *buf = NULL;
+    uint64_t ts = cmt_time_now();
 
+    if (counter) {
+        cmt_counter_inc(counter, ts,
+                        2, (char *[]) {name, "start"});
+    }
 
     pre_size = flb_input_chunk_get_real_size(ic);
     if (cio_chunk_is_up(ic->chunk) == CIO_FALSE) {
+        if (counter) {
+            cmt_counter_inc(counter, ts,
+                            2, (char *[]) {name, "not_up"});
+        }
         ret = cio_chunk_up(ic->chunk);
         if (ret == -1) {
+            if (counter) {
+                cmt_counter_inc(counter, ts,
+                                2, (char *[]) {name, "up_fail"});
+            }
             return NULL;
         }
+    }
+            
+    if (counter) {
+        cmt_counter_inc(counter, ts,
+                        2, (char *[]) {name, "get_content"});
     }
 
     /*
@@ -1629,9 +1648,20 @@ const void *flb_input_chunk_flush(struct flb_input_chunk *ic, size_t *size)
         return NULL;
     }
 
+
+    if (counter) {
+        cmt_counter_inc(counter, ts,
+                        2, (char *[]) {name, "check_not_buf"});
+    }
+
     if (!buf) {
         *size = 0;
         return NULL;
+    }
+
+    if (counter) {
+        cmt_counter_inc(counter, ts,
+                        2, (char *[]) {name, "set_busy_and_lock"});
     }
 
     /* Set it busy as it likely it's a reference for an outgoing task */
@@ -1642,6 +1672,11 @@ const void *flb_input_chunk_flush(struct flb_input_chunk *ic, size_t *size)
 
     post_size = flb_input_chunk_get_real_size(ic);
     if (post_size != pre_size) {
+        if (counter) {
+            cmt_counter_inc(counter, ts,
+                            2, (char *[]) {name, "update_output_instances"});
+        }
+
         diff_size = post_size - pre_size;
         flb_input_chunk_update_output_instances(ic, diff_size);
     }
