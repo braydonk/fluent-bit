@@ -24,25 +24,6 @@
 
 pthread_key_t ph_metrics_key;
 
-/* Return the newest storage metrics buffer */
-static struct prom_http_buf *metrics_get_latest()
-{
-    struct prom_http_buf *buf;
-    struct mk_list *metrics_list;
-
-    metrics_list = pthread_getspecific(ph_metrics_key);
-    if (!metrics_list) {
-        return NULL;
-    }
-
-    if (mk_list_size(metrics_list) == 0) {
-        return NULL;
-    }
-
-    buf = mk_list_entry_last(metrics_list, struct prom_http_buf, _head);
-    return buf;
-}
-
 /* Delete unused metrics, note that we only care about the latest node */
 static int cleanup_metrics()
 {
@@ -119,7 +100,9 @@ static void cb_mq_metrics(mk_mq_t *queue, void *data, size_t size)
             return;
         }
         mk_list_init(metrics_list);
+        flb_info("initializing metrics list");
         pthread_setspecific(ph_metrics_key, metrics_list);
+        flb_info("initialized metrics list");
     }
 
     /* FIXME: convert data ? */
@@ -148,6 +131,7 @@ static int http_server_mq_create(struct prom_http *ph)
     int ret;
 
     pthread_key_create(&ph_metrics_key, destruct_metrics);
+    flb_info("***created metrics key***");
 
     ret = mk_mq_create(ph->ctx, "/metrics", cb_mq_metrics, NULL);
     if (ret == -1) {
@@ -189,6 +173,51 @@ static void cb_root(mk_request_t *request, void *data)
     mk_http_send(request, "Fluent Bit Prometheus Exporter\n", 31, NULL);
     mk_http_done(request);
 }
+
+static struct mk_list *read_metrics_list() {
+    return pthread_getspecific(ph_metrics_key);
+}
+
+/* Return the newest storage metrics buffer */
+struct prom_http_buf *metrics_get_latest()
+{
+    struct prom_http_buf *buf;
+    struct mk_list *metrics_list;
+
+    metrics_list = pthread_getspecific(ph_metrics_key);
+    if (!metrics_list) {
+        return NULL;
+    }
+
+    if (mk_list_size(metrics_list) == 0) {
+        return NULL;
+    }
+
+    buf = mk_list_entry_last(metrics_list, struct prom_http_buf, _head);
+    return buf;
+}
+
+/* Return the newest storage metrics buffer */
+struct prom_http_buf *get_prom_metrics()
+{
+    struct prom_http_buf *buf;
+    struct mk_list *metrics_list;
+
+    metrics_list = read_metrics_list();
+    if (!metrics_list) {
+        flb_info("failed getting metric key");
+        return NULL;
+    }
+
+    if (mk_list_size(metrics_list) == 0) {
+        flb_info("metrics list size was empty");
+        return NULL;
+    }
+
+    buf = mk_list_entry_last(metrics_list, struct prom_http_buf, _head);
+    return buf;
+}
+
 
 struct prom_http *prom_http_server_create(struct prom_exporter *ctx,
                                           const char *listen,

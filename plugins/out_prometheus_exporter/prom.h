@@ -20,8 +20,14 @@
 #ifndef FLB_PROMETHEUS_EXPORTER_H
 #define FLB_PROMETHEUS_EXPORTER_H
 
+#define PROM_BUFFER_MAX_SIZE    "4M"
+#define PROM_BUFFER_CHUNK_SIZE  "512K"
+
+#include <fluent-bit/flb_downstream.h>
 #include <fluent-bit/flb_output_plugin.h>
 #include <fluent-bit/flb_hash_table.h>
+
+#include <monkey/monkey.h>
 
 /* Plugin context */
 struct prom_exporter {
@@ -38,6 +44,16 @@ struct prom_exporter {
 
     /* internal labels ready to append */
     struct mk_list kv_labels;
+
+    /* Buffer chunk size */
+    size_t buffer_chunk_size;
+    size_t buffer_max_size;
+
+    /* Downstream connection management */
+    struct flb_downstream *downstream;
+    struct mk_event *request_event;
+    struct mk_list connections;
+    struct mk_server *server;
 
     /* instance context */
     struct flb_output_instance *ins;

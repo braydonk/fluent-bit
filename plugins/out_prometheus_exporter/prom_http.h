@@ -41,6 +41,9 @@ struct prom_http {
     struct flb_config *config;    /* Fluent Bit context */
 };
 
+// Server
+struct prom_http_buf *metrics_get_latest();
+struct prom_http_buf *get_prom_metrics();
 struct prom_http *prom_http_server_create(struct prom_exporter *ctx,
                                           const char *listen,
                                           int tcp_port,
