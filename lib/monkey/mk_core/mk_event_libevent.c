@@ -327,6 +327,9 @@ static inline int _mk_event_timeout_create(struct mk_event_ctx *ctx,
     _mk_event_add(ctx, fd[0], MK_EVENT_NOTIFICATION, MK_EVENT_READ, data);
     event->mask = MK_EVENT_READ;
 
+    ev_map = event->data;    
+    ev_map->pipe[0] = fd[0];
+
     return fd[0];
 }
 
