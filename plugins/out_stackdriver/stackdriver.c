@@ -36,7 +36,9 @@
 
 #include <msgpack.h>
 
+#include "fluent-bit/flb_sds.h"
 #include "gce_metadata.h"
+#include "msgpack/pack.h"
 #include "stackdriver.h"
 #include "stackdriver_conf.h"
 #include "stackdriver_operation.h"
@@ -372,7 +374,7 @@ static flb_sds_t get_google_token(struct flb_stackdriver *ctx)
         if (time(NULL) >= cached_expiration) {
             return output;
         } else {
-            /* 
+            /*
              * Cached token is expired. Wait on lock to use up-to-date token
              * by either waiting for it to be refreshed or refresh it ourselves.
              */
@@ -1068,7 +1070,7 @@ static int pack_resource_labels(struct flb_stackdriver *ctx,
                 if (rval != NULL && rval->o.type == MSGPACK_OBJECT_STR) {
                     flb_mp_map_header_append(mh);
                     msgpack_pack_str(mp_pck, flb_sds_len(label_kv->key));
-                    msgpack_pack_str_body(mp_pck, label_kv->key, 
+                    msgpack_pack_str_body(mp_pck, label_kv->key,
                         flb_sds_len(label_kv->key));
                     msgpack_pack_str(mp_pck, flb_sds_len(rval->val.string));
                     msgpack_pack_str_body(mp_pck, rval->val.string,
@@ -1082,7 +1084,7 @@ static int pack_resource_labels(struct flb_stackdriver *ctx,
             } else {
                 flb_mp_map_header_append(mh);
                 msgpack_pack_str(mp_pck, flb_sds_len(label_kv->key));
-                msgpack_pack_str_body(mp_pck, label_kv->key, 
+                msgpack_pack_str_body(mp_pck, label_kv->key,
                     flb_sds_len(label_kv->key));
                 msgpack_pack_str(mp_pck, flb_sds_len(label_kv->val));
                 msgpack_pack_str_body(mp_pck, label_kv->val,
@@ -1284,7 +1286,7 @@ static int cb_stackdriver_init(struct flb_output_instance *ins,
             return -1;
         }
 
-        if (ctx->resource_type != RESOURCE_TYPE_GENERIC_NODE 
+        if (ctx->resource_type != RESOURCE_TYPE_GENERIC_NODE
             && ctx->resource_type != RESOURCE_TYPE_GENERIC_TASK) {
             ret = gce_metadata_read_zone(ctx);
             if (ret == -1) {
@@ -1434,13 +1436,13 @@ static int get_trace_sampled(int * trace_sampled_value, const msgpack_object * s
 {
     msgpack_object tmp;
     int ret = get_msgpack_obj(&tmp, src_obj, key, flb_sds_len(key), MSGPACK_OBJECT_BOOLEAN);
-    
+
     if (ret == 0 && tmp.via.boolean == true) {
         *trace_sampled_value = FLB_TRUE;
         return 0;
     } else if (ret == 0 && tmp.via.boolean == false) {
         *trace_sampled_value = FLB_FALSE;
-        return 0;        
+        return 0;
     }
 
     return -1;
@@ -1572,7 +1574,7 @@ static int pack_json_payload(int insert_id_extracted,
 
     /* points back to the beginning of map */
     kv = obj->via.map.ptr;
-    for(; kv != kvend; ++kv	) {
+    for(; kv != kvend; ++kv ) {
         key_not_found = 1;
 
         /* processing logging.googleapis.com/insertId */
@@ -1675,8 +1677,8 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
     int entry_size = 3;
     size_t s;
     // size_t off = 0;
-    char path[PATH_MAX];
-    char time_formatted[255];
+    flb_sds_t path;
+    flb_sds_t time_formatted;
     const char *newtag;
     const char *new_log_name;
     msgpack_object *obj;
@@ -1696,7 +1698,7 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
     /* Parameters for trace */
     int trace_extracted = FLB_FALSE;
     flb_sds_t trace;
-    char stackdriver_trace[PATH_MAX];
+    flb_sds_t stackdriver_trace;
     const char *new_trace;
 
     /* Parameters for span id */
@@ -1821,7 +1823,7 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
     msgpack_pack_str_body(&mp_pck, "labels", 6);
 
     ret = pack_resource_labels(ctx, &mh, &mp_pck, data, bytes);
-    if (ret != 0) { 
+    if (ret != 0) {
         if (ctx->resource_type == RESOURCE_TYPE_K8S) {
             ret = extract_local_resource_id(data, bytes, ctx, tag);
             if (ret != 0) {
@@ -2314,7 +2316,7 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
         /* Extract httpRequest */
         init_http_request(&http_request);
         http_request_extra_size = 0;
-        http_request_extracted = extract_http_request(&http_request, 
+        http_request_extracted = extract_http_request(&http_request,
                                                       ctx->http_request_key,
                                                       ctx->http_request_key_size,
                                                       obj, &http_request_extra_size);
@@ -2356,21 +2358,20 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
 
         /* Add trace into the log entry */
         if (trace_extracted == FLB_TRUE) {
-            msgpack_pack_str(&mp_pck, 5);
-            msgpack_pack_str_body(&mp_pck, "trace", 5);
+            msgpack_pack_str_with_body(&mp_pck, "trace", 5);
 
             if (ctx->autoformat_stackdriver_trace) {
-                len = snprintf(stackdriver_trace, sizeof(stackdriver_trace) - 1,
-                    "projects/%s/traces/%s", ctx->project_id, trace);
-                new_trace = stackdriver_trace;
+                stackdriver_trace = flb_sds_create_size(PATH_MAX);
+                flb_sds_snprintf(&stackdriver_trace, flb_sds_alloc(stackdriver_trace),
+                                      "projects/%s/traces/%s", ctx->project_id, trace);
+                msgpack_pack_str_with_body(&mp_pck, stackdriver_trace,
+                                            flb_sds_len(stackdriver_trace));
+                flb_sds_destroy(stackdriver_trace);
             }
             else {
-                len = flb_sds_len(trace);
-                new_trace = trace;
+                msgpack_pack_str_with_body(&mp_pck, trace, flb_sds_len(trace));
             }
 
-            msgpack_pack_str(&mp_pck, len);
-            msgpack_pack_str_body(&mp_pck, new_trace, len);
             flb_sds_destroy(trace);
         }
 
@@ -2465,12 +2466,14 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
         }
 
         if (project_id_extracted == FLB_TRUE) {
-            len = snprintf(path, sizeof(path) - 1,
-                       "projects/%s/logs/%s", project_id_key, new_log_name);
+            len = flb_sds_snprintf(&path, flb_sds_alloc(path),
+                                   "projects/%s/logs/%s", project_id_key,
+                                    new_log_name);
             flb_sds_destroy(project_id_key);
         } else {
-            len = snprintf(path, sizeof(path) - 1,
-                       "projects/%s/logs/%s", ctx->export_to_project_id, new_log_name);
+            len = flb_sds_snprintf(&path, flb_sds_alloc(path),
+                                   "projects/%s/logs/%s", ctx->export_to_project_id,
+                                   new_log_name);
         }
 
         /* logName */
@@ -2484,30 +2487,28 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
         msgpack_pack_str_body(&mp_pck, path, len);
         flb_sds_destroy(stream_key);
         flb_sds_destroy(stream);
+        flb_sds_destroy(path);
 
         /* timestamp */
-        msgpack_pack_str(&mp_pck, 9);
-        msgpack_pack_str_body(&mp_pck, "timestamp", 9);
+        msgpack_pack_str_with_body(&mp_pck, "timestamp", 9);
 
         /* Format the time */
         /*
          * If format is timestamp_object or timestamp_duo_fields,
          * tms has been updated.
          *
-         * If timestamp is not presen,
+         * If timestamp is not present,
          * use the default tms(current time).
          */
 
         gmtime_r(&log_event.timestamp.tm.tv_sec, &tm);
-        s = strftime(time_formatted, sizeof(time_formatted) - 1,
-                        FLB_STD_TIME_FMT, &tm);
-        len = snprintf(time_formatted + s, sizeof(time_formatted) - 1 - s,
-                       ".%09" PRIu64 "Z",
+        time_formatted = flb_sds_create_size(255);
+        s = strftime(time_formatted, flb_sds_avail(time_formatted),
+                    FLB_STD_TIME_FMT, &tm);
+        flb_sds_printf(&time_formatted, ".%09" PRIu64 "Z",
                        (uint64_t) log_event.timestamp.tm.tv_nsec);
-        s += len;
-
-        msgpack_pack_str(&mp_pck, s);
-        msgpack_pack_str_body(&mp_pck, time_formatted, s);
+        msgpack_pack_str_with_body(&mp_pck, time_formatted, flb_sds_len(time_formatted));
+        flb_sds_destroy(time_formatted);
     }
 
     flb_log_event_decoder_destroy(&log_decoder);
@@ -2594,7 +2595,7 @@ static void update_retry_metric(struct flb_stackdriver *ctx,
                                  uint64_t ts,
                                  int http_status)
 {
-    char tmp[32]; 
+    char tmp[32];
     char *name = (char *) flb_output_name(ctx->ins);
 
     /* convert status to string format */
