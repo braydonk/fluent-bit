@@ -1679,6 +1679,7 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
     // size_t off = 0;
     flb_sds_t path;
     flb_sds_t time_formatted;
+    flb_sds_t tz_formatted;
     const char *newtag;
     const char *new_log_name;
     msgpack_object *obj;
@@ -2505,6 +2506,7 @@ static flb_sds_t stackdriver_format(struct flb_stackdriver *ctx,
         time_formatted = flb_sds_create_size(255);
         s = strftime(time_formatted, flb_sds_avail(time_formatted),
                     FLB_STD_TIME_FMT, &tm);
+        tz_formatted = flb_sds_create_size(255)
         flb_sds_printf(&time_formatted, ".%09" PRIu64 "Z",
                        (uint64_t) log_event.timestamp.tm.tv_nsec);
         msgpack_pack_str_with_body(&mp_pck, time_formatted, flb_sds_len(time_formatted));
