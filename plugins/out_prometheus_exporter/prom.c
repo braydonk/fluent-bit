@@ -22,11 +22,10 @@
 #include <fluent-bit/flb_metrics.h>
 
 #include "prom.h"
-#include "prom_http.h"
 #include "prom_http_conn.h"
 #include "prom_metrics.h"
 
-static int prom_exporter_destroy(struct prom_exporter *ctx) 
+static void prom_exporter_destroy(struct prom_exporter *ctx) 
 {
     if (!ctx) {
         return 0;
@@ -36,11 +35,14 @@ static int prom_exporter_destroy(struct prom_exporter *ctx)
         flb_hash_table_destroy(ctx->ht_metrics);
     }
 
+    prom_metrics_destroy_metrics();
     flb_kv_release(&ctx->kv_labels);
     flb_downstream_destroy(ctx->downstream);
     flb_free(ctx->request_event);
     mk_destroy(ctx->mk_ctx);
     flb_free(ctx);
+
+    return;
 }
 
 static int request_event_handler(void* data) 
@@ -140,8 +142,6 @@ static int cb_prom_init(struct flb_output_instance *ins,
     /* HTTP Server to use for request parsing */
     ctx->mk_ctx = mk_create();
     ctx->mk_ctx->server->keep_alive = MK_TRUE;
-
-    ctx->metrics_mq = prom_metrics_mq_create(ctx->mk_ctx);
 
     ctx->downstream = flb_downstream_create(FLB_TRANSPORT_TCP,
                                             ins->flags,
@@ -331,15 +331,7 @@ static int cb_prom_exit(void *data, struct flb_config *config)
         return 0;
     }
 
-    // prom_http_server_stop(ctx->http);
-    // prom_http_server_destroy(ctx->http);
-
-    ret = prom_exporter_destroy(ctx);
-    // Would they prefer `return prom_exporter_destroy` instead?
-    if (ret != 0) {
-        return -1;
-    }
-
+    prom_exporter_destroy(ctx);
     return 0;
 }
 
@@ -356,6 +348,7 @@ static struct flb_config_map config_map[] = {
      0, FLB_TRUE, offsetof(struct prom_exporter, buffer_chunk_size),
      ""
     },
+
     {
      FLB_CONFIG_MAP_BOOL, "add_timestamp", "false",
      0, FLB_TRUE, offsetof(struct prom_exporter, add_timestamp),

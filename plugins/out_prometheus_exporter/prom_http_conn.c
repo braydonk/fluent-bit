@@ -22,7 +22,6 @@
 #include <fluent-bit/flb_http_server.h>
 #include <fluent-bit/flb_version.h>
 #include "prom.h"
-#include "prom_http.h"
 #include "prom_http_conn.h"
 #include "prom_metrics.h"
 
@@ -164,11 +163,8 @@ static int prom_http_req_handle(struct prom_exporter *ctx, struct prom_http_conn
                          struct mk_http_session *session,
                          struct mk_http_request *request)
 {
-    int i;
     int ret;
-    int len;
     char *uri;
-    struct mk_http_header *header;
     flb_sds_t content;
 
     if (request->uri.data[0] != '/') {
@@ -219,7 +215,7 @@ static int prom_http_req_handle(struct prom_exporter *ctx, struct prom_http_conn
     return ret;
 }
 
-static int prom_http_req_handle_error(struct flb_http *ctx, struct http_conn *conn,
+static int prom_http_req_handle_error(struct prom_exporter *ctx, struct prom_http_conn *conn,
                                 struct mk_http_session *session,
                                 struct mk_http_request *request)
 {
@@ -491,10 +487,10 @@ void prom_http_conn_release_all(struct prom_exporter *ctx)
 {
     struct mk_list *tmp;
     struct mk_list *head;
-    struct http_conn *conn;
+    struct prom_http_conn *conn;
 
     mk_list_foreach_safe(head, tmp, &ctx->connections) {
         conn = mk_list_entry(head, struct prom_http_conn, _head);
-        http_conn_del(conn);
+        prom_http_conn_destroy(conn);
     }
 }

@@ -53,7 +53,6 @@ struct prom_exporter {
     struct mk_event *request_event;
     struct mk_list connections;
     mk_ctx_t *mk_ctx;
-    int metrics_mq;
 
     /* instance context */
     struct flb_output_instance *ins;
