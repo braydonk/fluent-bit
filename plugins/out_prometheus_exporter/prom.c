@@ -24,6 +24,7 @@
 #include "prom.h"
 #include "prom_http.h"
 #include "prom_http_conn.h"
+#include "prom_metrics.h"
 
 static int prom_exporter_destroy(struct prom_exporter *ctx) 
 {
@@ -36,9 +37,9 @@ static int prom_exporter_destroy(struct prom_exporter *ctx)
     }
 
     flb_kv_release(&ctx->kv_labels);
-    flb_downstream_destroy(&ctx->downstream);
+    flb_downstream_destroy(ctx->downstream);
     flb_free(ctx->request_event);
-    flb_free(ctx->server);
+    mk_destroy(ctx->mk_ctx);
     flb_free(ctx);
 }
 
@@ -137,8 +138,10 @@ static int cb_prom_init(struct flb_output_instance *ins,
     }
 
     /* HTTP Server to use for request parsing */
-    ctx->server = flb_calloc(1, sizeof(struct mk_server));
-    ctx->server->keep_alive = MK_TRUE;
+    ctx->mk_ctx = mk_create();
+    ctx->mk_ctx->server->keep_alive = MK_TRUE;
+
+    ctx->metrics_mq = prom_metrics_mq_create(ctx->mk_ctx);
 
     ctx->downstream = flb_downstream_create(FLB_TRANSPORT_TCP,
                                             ins->flags,
@@ -157,14 +160,6 @@ static int cb_prom_init(struct flb_output_instance *ins,
     }
 
     // TODO: Check for threaded output in flb_downstream?
-        
-    /* HTTP Server context */
-    ctx->http = prom_http_server_create(ctx,
-                                        ins->host.name, ins->host.port, config);
-    if (!ctx->http) {
-        flb_plg_error(ctx->ins, "could not initialize HTTP server, aborting");
-        return -1;
-    }
 
     /* Hash table for metrics */
     ctx->ht_metrics = flb_hash_table_create(FLB_HASH_TABLE_EVICT_NONE, 32, 0);
@@ -182,8 +177,7 @@ static int cb_prom_init(struct flb_output_instance *ins,
     ctx->request_event->data = ctx;
     ctx->request_event->fd = ctx->downstream->server_fd;
 
-    // Add custom event to the engine to handle requests to the Prometheus
-    // server endpoint.
+    /* Add custom event to the engine to handle requests to the Prometheus server endpoint. */
     ret = mk_event_add(flb_engine_evl_get(), ctx->downstream->server_fd, 
                        FLB_ENGINE_EV_CUSTOM, MK_EVENT_READ, ctx->request_event);
     if (ret != 0) {
@@ -191,14 +185,9 @@ static int cb_prom_init(struct flb_output_instance *ins,
         return -1;
     }
 
-    // /* Start HTTP Server */
-    // ret = prom_http_server_start(ctx->http);
-    // if (ret == -1) {
-    //     return -1;
-    // }
-
     flb_plg_info(ctx->ins, "listening iface=%s tcp_port=%d",
                  ins->host.name, ins->host.port);
+
     return 0;
 }
 
@@ -323,9 +312,7 @@ static void cb_prom_flush(struct flb_event_chunk *event_chunk,
     }
 
     /* push new (full) metrics payload */
-    ret = prom_http_server_mq_push_metrics(ctx->http,
-                                           (char *) metrics,
-                                           flb_sds_len(metrics));
+    ret = prom_metrics_push_new_metrics((char *) metrics, flb_sds_len(metrics));
     flb_sds_destroy(metrics);
 
     if (ret != 0) {
@@ -344,8 +331,8 @@ static int cb_prom_exit(void *data, struct flb_config *config)
         return 0;
     }
 
-    prom_http_server_stop(ctx->http);
-    prom_http_server_destroy(ctx->http);
+    // prom_http_server_stop(ctx->http);
+    // prom_http_server_destroy(ctx->http);
 
     ret = prom_exporter_destroy(ctx);
     // Would they prefer `return prom_exporter_destroy` instead?

@@ -9,6 +9,7 @@ endif()
 set(src
   prom_http_conn.c
   prom_http.c
+  prom_metrics.c
   prom.c
   )
 

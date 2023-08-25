@@ -28,11 +28,10 @@
 #include <fluent-bit/flb_hash_table.h>
 
 #include <monkey/monkey.h>
+#include <monkey/mk_lib.h>
 
 /* Plugin context */
 struct prom_exporter {
-    void *http;
-
     /* hash table for metrics reported */
     struct flb_hash_table *ht_metrics;
 
@@ -53,7 +52,8 @@ struct prom_exporter {
     struct flb_downstream *downstream;
     struct mk_event *request_event;
     struct mk_list connections;
-    struct mk_server *server;
+    mk_ctx_t *mk_ctx;
+    int metrics_mq;
 
     /* instance context */
     struct flb_output_instance *ins;

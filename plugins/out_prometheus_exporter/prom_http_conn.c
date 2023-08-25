@@ -24,13 +24,13 @@
 #include "prom.h"
 #include "prom_http.h"
 #include "prom_http_conn.h"
+#include "prom_metrics.h"
 
 static int prom_http_io_net_write_response(struct prom_http_conn *conn, int http_status, 
-                                           flb_sds_t content, flb_sds_t content_type)
+                                           char* content, int content_len, 
+                                           flb_sds_t content_type)
 {
-    int ret;
     size_t sent;
-    size_t content_len;
     flb_sds_t response;
     size_t response_len;
     flb_sds_t server_line;
@@ -57,7 +57,8 @@ static int prom_http_io_net_write_response(struct prom_http_conn *conn, int http
         if (!content_type_line) {
             return -1;
         }
-        content_type_line = flb_sds_printf("Content-Type: %s\r\n", content_type);
+        content_type_line = flb_sds_create("Content-Type: text/plain\r\n");
+        flb_sds_printf(&content_type_line, "Content-Type: %s\r\n", content_type);
     }
     else {
         content_type_line = flb_sds_create("Content-Type: text/plain\r\n");
@@ -75,7 +76,6 @@ static int prom_http_io_net_write_response(struct prom_http_conn *conn, int http
             return -1;
         }
 
-        content_len = flb_sds_len(content);
         flb_sds_printf(&content_line, "Content-Length: %i\r\n\r\n%s",
                        content_len, content);
     }
@@ -93,15 +93,11 @@ static int prom_http_io_net_write_response(struct prom_http_conn *conn, int http
     flb_sds_printf(&response, "%s%s%s", status_line, server_line, content_line);
     response_len = flb_sds_len(response);
 
-    ret = flb_io_net_write(conn->connection,
+    flb_io_net_write(conn->connection,
                      (void *) response,
                      response_len,
                      &sent);
-    //TODO: add (|| sent < len) maybe?
-    if (ret != 0) {
-        return -1;
-    }
-
+    //TODO: add if(sent < len) return -1 maybe?
     return 0;
 }
 
@@ -116,22 +112,20 @@ static int match_uri(char *request_uri, char *match_uri)
 
 static int prom_http_send_root(struct prom_http_conn *conn)
 {
+    flb_sds_t content = flb_sds_create("Fluent Bit Prometheus Exporter\n");
     return prom_http_io_net_write_response(conn, 200, 
-                                           "Fluent Bit Prometheus Exporter\n", NULL);
+                                           content, flb_sds_len(content), NULL);
 }
 
 static int prom_http_send_metrics(struct prom_http_conn *conn)
 {
     int ret;
-    struct prom_http_buf *buf;
+    struct prom_metrics_buf *buf;
     flb_sds_t content_type;
-
     
-    buf = get_prom_metrics();
-    // TODO: I have always hated returning 404 when no metrics are found, but this might 
-    // be considered a breaking change if I fixed it now.
+    buf = prom_metrics_get_latest();
     if (!buf) {
-        prom_http_io_net_write_response(conn, 404, NULL, NULL);
+        prom_http_io_net_write_response(conn, 404, NULL, 0, NULL);
         return -1;
     }
 
@@ -139,7 +133,7 @@ static int prom_http_send_metrics(struct prom_http_conn *conn)
 
     content_type = flb_sds_create_len(FLB_HS_CONTENT_TYPE_PROMETHEUS_STR, 
                                       FLB_HS_CONTENT_TYPE_PROMETHEUS_LEN);
-    prom_http_io_net_write_response(conn, 200, buf->buf_data, content_type);
+    ret = prom_http_io_net_write_response(conn, 200, buf->buf_data, buf->buf_size, content_type);
 
     buf->users--;
 
@@ -175,9 +169,11 @@ static int prom_http_req_handle(struct prom_exporter *ctx, struct prom_http_conn
     int len;
     char *uri;
     struct mk_http_header *header;
+    flb_sds_t content;
 
     if (request->uri.data[0] != '/') {
-        prom_http_io_net_write_response(conn, 400, "error: invalid request\n", NULL);
+        content = flb_sds_create("error: invalid request\n");
+        prom_http_io_net_write_response(conn, 400, content, flb_sds_len(content), NULL);
         return -1;
     }
 
@@ -201,11 +197,12 @@ static int prom_http_req_handle(struct prom_exporter *ctx, struct prom_http_conn
     }
 
     /* Should we close the session after this request? */
-    mk_http_keepalive_check(session, request, ctx->server);
+    mk_http_keepalive_check(session, request, ctx->mk_ctx->server);
 
     if (request->method != MK_METHOD_GET) {
+        content = flb_sds_create("error: only GET method is supported\n");
         prom_http_io_net_write_response(conn, 400, 
-                                        "error: only GET method is supported\n", NULL);
+                                        content, flb_sds_len(content), NULL);
         return -1;
     }
 
@@ -226,7 +223,8 @@ static int prom_http_req_handle_error(struct flb_http *ctx, struct http_conn *co
                                 struct mk_http_session *session,
                                 struct mk_http_request *request)
 {
-    prom_http_io_net_write_response(conn, 400, "error: invalid request\n", NULL);
+    flb_sds_t content = "error: invalid request\n";
+    prom_http_io_net_write_response(conn, 400, content, flb_sds_len(content), NULL);
     return -1;
 }
 
@@ -401,6 +399,7 @@ int prom_http_conn_event(void *data)
         return bytes;
     }
 
+    flb_info("hi closing now");
     if (event->mask & MK_EVENT_CLOSE) {
         flb_plg_trace(ctx->ins, "fd=%i hangup", event->fd);
         prom_http_conn_destroy(conn);
@@ -459,7 +458,7 @@ struct prom_http_conn *prom_http_conn_create(struct flb_connection *conn,
         return NULL;
     }
 
-    prom_http_conn_session_init(&prom_conn->session, ctx->server, 
+    prom_http_conn_session_init(&prom_conn->session, ctx->mk_ctx->server, 
                                 prom_conn->connection->fd);
     prom_http_conn_request_init(&prom_conn->session, &prom_conn->request);
 
