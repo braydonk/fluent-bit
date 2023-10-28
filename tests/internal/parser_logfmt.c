@@ -171,7 +171,7 @@ void test_basic()
     }
 
     parser = flb_parser_create("logfmt", "logfmt", NULL, FLB_FALSE, NULL, NULL, NULL,
-                               FLB_FALSE, FLB_FALSE, FLB_FALSE,
+                               FLB_FALSE, FLB_FALSE, FLB_FALSE, FLB_FALSE,
                                NULL, 0, NULL, config);
     if (!TEST_CHECK(parser != NULL)) {
         TEST_MSG("flb_parser_create failed");
@@ -223,7 +223,7 @@ void test_time_key()
     }
 
     parser = flb_parser_create("logfmt", "logfmt", NULL, FLB_FALSE, "%Y-%m-%dT%H:%M:%S.%L", "time", NULL,
-                               FLB_FALSE, FLB_FALSE, FLB_FALSE,
+                               FLB_FALSE, FLB_FALSE, FLB_FALSE, FLB_FALSE,
                                NULL, 0, NULL, config);
     if (!TEST_CHECK(parser != NULL)) {
         TEST_MSG("flb_parser_create failed");
@@ -284,7 +284,7 @@ void test_time_keep()
     }
 
     parser = flb_parser_create("logfmt", "logfmt", NULL, FLB_FALSE, "%Y-%m-%dT%H:%M:%S.%L", "time", NULL,
-                               FLB_TRUE /*time_keep */, FLB_FALSE, FLB_FALSE,
+                               FLB_TRUE /*time_keep */, FLB_FALSE, FLB_FALSE, FLB_FALSE,
                                NULL, 0, NULL, config);
     if (!TEST_CHECK(parser != NULL)) {
         TEST_MSG("flb_parser_create failed");
@@ -317,6 +317,99 @@ void test_time_keep()
     flb_free(out_buf);
     flb_parser_destroy(parser);
     flb_config_exit(config);
+}
+
+void test_time_use_system_timezone()
+{
+    struct flb_parser *parser = NULL;
+    struct flb_config *config = NULL;
+    int ret = 0;
+    char tz[5] = "CEST\0";
+    char *original_tz;
+    /**
+     * TZ=CEST date -d @1597104000 
+     * Tue Aug 11 12:00:00 AM CEST 2020 
+     * 
+     * TZ=GMT date -d @1597104000 
+     * Tue Aug 11 12:00:00 AM GMT 2020
+     */
+    time_t expected_time = 1597104000;
+    char *input = "str=\"text\" int=100 double=1.23 bool=true time=2020-08-11T00:00:00";
+    void *out_buf = NULL;
+    size_t out_size = 0;
+    struct flb_time out_time;
+    char *expected_strs[] = {"str", "text", "int", "100", "double","1.23", "bool", "true"};
+    struct str_list expected = {
+                                .size = sizeof(expected_strs)/sizeof(char*),
+                                .lists = &expected_strs[0],
+    };
+
+    out_time.tm.tv_sec = 0;
+    out_time.tm.tv_nsec = 0;
+
+
+    config = flb_config_init();
+    if(!TEST_CHECK(config != NULL)) {
+        TEST_MSG("flb_config_init failed");
+        exit(1);
+    }
+
+    parser = flb_parser_create("logfmt", "logfmt", NULL, FLB_FALSE, "%Y-%m-%dT%H:%M:%S.%L", "time", NULL,
+                               FLB_FALSE, FLB_FALSE, 
+                               FLB_TRUE, /* time_system_timezone */ FLB_FALSE,
+                               NULL, 0, NULL, config);
+    if (!TEST_CHECK(parser != NULL)) {
+        TEST_MSG("flb_parser_create failed");
+        flb_config_exit(config);
+        exit(1);
+    }
+
+    /**
+     * Set the timezone to ensure mktime picks it up.
+     */
+    original_tz = getenv("TZ"); 
+    ret = setenv("TZ", tz, 1);
+    TEST_ASSERT_(ret == 0, "failed to set timezone to %s", tz);
+
+    ret = flb_parser_do(parser, input, strlen(input), &out_buf, &out_size, &out_time);
+    if (!TEST_CHECK(ret != -1)) {
+        TEST_MSG("flb_parser_do failed");
+        flb_parser_destroy(parser);
+        flb_config_exit(config);
+        exit(1);
+    }
+
+    ret = compare_msgpack(out_buf, out_size, &expected);
+    if (!TEST_CHECK(ret == 0)) {
+        TEST_MSG("compare failed");
+        flb_free(out_buf);
+        flb_parser_destroy(parser);
+        flb_config_exit(config);
+        exit(1);
+    }
+
+    if (!TEST_CHECK(out_time.tm.tv_sec == expected_time)) {
+        TEST_MSG("timestamp error. sec  Got=%ld Expect=%"PRIu32"", 
+                 out_time.tm.tv_sec, (uint32_t)expected_time);
+    }
+
+    /**
+     * Restore original timezone.
+     */
+    if (original_tz) {
+        ret = setenv("TZ", original_tz, 1);
+        TEST_ASSERT_(ret == 0, 
+                    "failed to restore timezone to %s", original_tz);
+        flb_free(original_tz);
+    } else {
+        ret = unsetenv("TZ");
+        TEST_ASSERT_(ret == 0,
+                     "failed to restore original timezone setting");
+    }
+
+    flb_free(out_buf);
+    flb_parser_destroy(parser);
+    flb_config_exit(config);   
 }
 
 void test_types()
@@ -361,7 +454,7 @@ void test_types()
     types->type = FLB_PARSER_TYPE_HEX;
 
     parser = flb_parser_create("logfmt", "logfmt", NULL, FLB_FALSE, NULL, NULL, NULL,
-                               FLB_FALSE, FLB_FALSE, FLB_FALSE,
+                               FLB_FALSE, FLB_FALSE, FLB_FALSE, FLB_FALSE,
                                types, 1, NULL, config);
     if (!TEST_CHECK(parser != NULL)) {
         TEST_MSG("flb_parser_create failed");
@@ -393,6 +486,7 @@ TEST_LIST = {
     { "basic", test_basic},
     { "time_key", test_time_key},
     { "time_keep", test_time_keep},
+    { "time_use_system_timezone", test_time_use_system_timezone },
     { "types", test_types},
     { 0 }
 };

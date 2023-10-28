@@ -231,7 +231,7 @@ void test_parser_time_lookup()
             continue;
         }
 
-        epoch = flb_parser_tm2time(&tm);
+        epoch = flb_parser_tm2time(&tm, FLB_FALSE);
         epoch -= year_diff;
         TEST_CHECK(t->epoch == epoch);
         TEST_CHECK(t->frac_seconds == ns);
@@ -487,7 +487,6 @@ static int a_mysql_unquote_test(struct flb_parser *p, char *source, char *expect
     return 1;
 }
 
-
 void test_mysql_unquoted()
 {
     struct flb_parser *p;
@@ -513,16 +512,192 @@ void test_mysql_unquoted()
 
     flb_parser_exit(config);
     flb_config_exit(config);
-
-
 }
 
+/**
+ * I've opted to leave this function around for future testers.
+ * When working with these C time structures, it can really help
+ * to just sanity check what the timestamp actually is under the
+ * hood. If you are adding or working with the timestamp tests,
+ * you can manually add this function to print out a human readable
+ * timestamp. Note that it will be in your system's local timezone;
+ * you'll have to do some math based on the test you're working with.
+ * - Braydon Kains, @braydonk
+ */
+void debug_print_local_timestamp(time_t t)
+{
+    struct tm tm;
+    char buf[80];
+    tm = *localtime(&t);
+    strftime(buf, sizeof(buf), "%a %Y-%m-%d %H:%M:%S %Z", &tm);
+    printf("%s\n", buf);
+}
+
+/**
+ * Given a flb_tm value and a string of the epoch seconds expected,
+ * test that calling flb_parser_tm2time will give the expected
+ * epoch value when printed to an epoch string.
+ */
+void tm2time_testcase(struct flb_tm *tm, char* expected_epoch, int system_timezone)
+{
+    char result_epoch[11];
+    time_t result = flb_parser_tm2time(tm, system_timezone);
+
+    /**
+     * This print format is copied from the timestamp print format
+     * of the standard output plugin.
+     */
+    snprintf(result_epoch, sizeof(result_epoch), "%"PRIu32"", (uint32_t)result);
+
+    TEST_CHECK_(strcmp(result_epoch, expected_epoch) == 0, 
+                "expected (%s), got (%s)", expected_epoch, result_epoch);
+}
+
+/**
+ * Perform a tm2time_testcase, but first set the specified timezone, and
+ * reset the timezone after.
+ */
+void set_tz_tm2time_testcase(char *tz, struct flb_tm *tm, char *expected_epoch)
+{
+    int ret;
+    char *original_tz = NULL;
+
+    /* Set the timezone and keep the original value to reset it later. */
+    if (tz) {
+        original_tz = getenv("TZ");
+        ret = setenv("TZ", tz, 1);
+        TEST_ASSERT_(ret == 0, 
+                     "failed to set timezone to %s", tz);
+    }
+
+    tm2time_testcase(tm, expected_epoch, FLB_TRUE);
+
+    /* Reset the timezone. */
+    if (original_tz) {
+        ret = setenv("TZ", original_tz, 1);
+        TEST_ASSERT_(ret == 0, 
+                     "failed to restore timezone to %s", original_tz);
+        flb_free(original_tz);
+    } else {
+        ret = unsetenv("TZ");
+        TEST_ASSERT_(ret == 0,
+                     "failed to restore original timezone setting");
+    }
+}
+
+void test_tm2time_timegm()
+{
+    /**
+     * TZ=GMT date -d @1673654400
+     * Mon Feb 20 12:00:00 AM EST 2023
+     */
+    char expected_epoch[11] = "1673654400\0";
+    struct flb_tm *tm = malloc(sizeof(struct tm)); 
+
+    tm->tm.tm_year = 2023-1900;
+    tm->tm.tm_mon = 0;
+    tm->tm.tm_mday = 14;
+    tm->tm.tm_hour = 0;
+    tm->tm.tm_min = 0;
+    tm->tm.tm_sec = 0;
+
+    tm2time_testcase(tm, expected_epoch, FLB_FALSE);
+
+    flb_free(tm);
+}
+
+void test_tm2time_timegm_with_gmtoff()
+{
+    /**
+     * TZ=GMT date -d @1676869200
+     * Mon Feb 20 05:00:00 AM GMT 2023
+     *
+     * TZ=EST date -d @1676869200
+     * Mon Feb 20 12:00:00 AM EST 2023
+     */
+    char expected_epoch[11] = "1676869200\0";
+    struct flb_tm *tm = malloc(sizeof(struct flb_tm));
+
+    tm->tm.tm_year = 2023-1900;
+    tm->tm.tm_mon = 1;
+    tm->tm.tm_mday = 20;
+    tm->tm.tm_hour = 0;
+    tm->tm.tm_min = 0;
+    tm->tm.tm_sec = 0;
+    /**
+     * tm_gmtoff is the number of seconds east of GMT.
+     * This calculation equates to UTC-5, which in January
+     * is EST.
+     */
+    flb_tm_gmtoff(tm) = (-5)*3600;
+
+    tm2time_testcase(tm, expected_epoch, FLB_FALSE);
+
+    flb_free(tm);
+}
+
+void test_tm2time_system_timezone()
+{
+    /**
+     * TZ=MST7MDT date -d @1676876400
+     * Mon Feb 20 12:00:00 AM MST 2023
+     *
+     * TZ=GMT date -d @1676876400
+     * Mon Feb 20 07:00:00 AM GMT 2023
+     */
+    char expected_epoch[11] = "1676876400\0";
+    struct flb_tm *tm = malloc(sizeof(struct flb_tm));
+
+    tm->tm.tm_year = 2023-1900;
+    tm->tm.tm_mon = 1;
+    tm->tm.tm_mday = 20;
+    tm->tm.tm_hour = 0;
+    tm->tm.tm_min = 0;
+    tm->tm.tm_sec = 0;
+
+    set_tz_tm2time_testcase("MST7MDT", tm, expected_epoch);
+
+    flb_free(tm);
+}
+
+void test_tm2time_mktime_system_timezone_find_dst()
+{
+    /**
+     * TZ=GMT date -d @1587355200
+     * Mon Apr 20 04:00:00 AM GMT 2020
+     *
+     * TZ=EST5EDT date -d @1587355200
+     * Mon Apr 20 12:00:00 AM EDT 2020
+     */
+    char expected_epoch[11] = "1587355200\0";
+    struct flb_tm *tm = malloc(sizeof(struct flb_tm));
+
+    tm->tm.tm_year = 2020-1900;
+    tm->tm.tm_mon = 3;
+    tm->tm.tm_mday = 20;
+    tm->tm.tm_hour = 0;
+    tm->tm.tm_min = 0;
+    tm->tm.tm_sec = 0;
+
+    /**
+     * In this test case, tm2time should be able automatically
+     * calculating and determining EDT is correct based on the 
+     * date of April 20, which is after the daylight savings switch. 
+     */ 
+    set_tz_tm2time_testcase("EST5EDT", tm, expected_epoch);
+
+    flb_free(tm);
+}
 
 TEST_LIST = {
     { "tzone_offset", test_parser_tzone_offset},
     { "time_lookup", test_parser_time_lookup},
     { "json_time_lookup", test_json_parser_time_lookup},
     { "regex_time_lookup", test_regex_parser_time_lookup},
-    { "mysql_unquoted" , test_mysql_unquoted },
+    { "mysql_unquoted", test_mysql_unquoted },
+    { "tm2time_timegm", test_tm2time_timegm },
+    { "tm2time_timegm_with_gmtoff", test_tm2time_timegm_with_gmtoff },
+    { "tm2time_system_timezone", test_tm2time_system_timezone },
+    { "tm2time_system_timezone_find_dst", test_tm2time_mktime_system_timezone_find_dst },
     { 0 }
 };
