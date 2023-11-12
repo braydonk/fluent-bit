@@ -22,6 +22,8 @@
 Approach for this tests is basing on filter_kubernetes tests
 */
 
+#ifndef _WIN32
+
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
 #include <fluent-bit/flb_pthread.h>
@@ -1581,3 +1583,5 @@ TEST_LIST = {
 #endif
     {NULL, NULL}
 };
+
+#endif

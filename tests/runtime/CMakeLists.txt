@@ -61,7 +61,9 @@ endif()
 
 # Filter Plugins
 if(FLB_IN_LIB AND FLB_OUT_LIB)
-  FLB_RT_TEST(FLB_FILTER_AWS             "filter_aws.c")
+  if(FLB_AWS)
+    FLB_RT_TEST(FLB_FILTER_AWS             "filter_aws.c")
+  endif()
   FLB_RT_TEST(FLB_FILTER_CHECKLIST       "filter_checklist.c")
   FLB_RT_TEST(FLB_FILTER_EXPECT          "filter_expect.c")
   FLB_RT_TEST(FLB_FILTER_STDOUT          "filter_stdout.c")

@@ -11,6 +11,10 @@
 #include <string.h>
 #include "flb_tests_internal.h"
 
+#ifdef _WIN32
+#include "include/win32/setenv.h"
+#endif
+
 /* Parsers configuration */
 #define JSON_PARSERS  FLB_TESTS_DATA_PATH "/data/parser/json.conf"
 #define REGEX_PARSERS FLB_TESTS_DATA_PATH "/data/parser/regex.conf"

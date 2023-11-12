@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit/flb_sds.h>
 #include <fluent-bit/flb_aws_credentials.h>
 #include <fluent-bit/flb_mem.h>
@@ -380,3 +382,5 @@ TEST_LIST = {
     test_http_provider_malformed_response},
     { 0 }
 };
+
+#endif

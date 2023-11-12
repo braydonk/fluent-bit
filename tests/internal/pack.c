@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit/flb_info.h>
 #include <fluent-bit/flb_mem.h>
 #include <fluent-bit/flb_pack.h>
@@ -912,3 +914,5 @@ TEST_LIST = {
     { "utf8_to_json", test_utf8_to_json},
     { 0 }
 };
+
+#endif

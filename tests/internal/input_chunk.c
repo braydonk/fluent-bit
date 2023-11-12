@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -514,3 +516,5 @@ TEST_LIST = {
     {"input_chunk_fs_chunk_size_real", flb_test_input_chunk_fs_chunks_size_real},
     {NULL, NULL}
 };
+
+#endif

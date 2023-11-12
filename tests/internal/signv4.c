@@ -32,6 +32,8 @@
  * provides certain wrappers to validate expected results.
  */
 
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit/flb_info.h>
 #include <fluent-bit/flb_mem.h>
 #include <fluent-bit/flb_kv.h>
@@ -664,3 +666,5 @@ TEST_LIST = {
     { "normalize", normalize},
     { 0 }
 };
+
+#endif

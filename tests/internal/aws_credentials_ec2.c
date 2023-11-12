@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#ifdef FLB_HAVE_UNISTD
+
 #include "../include/aws_client_mock.h"
 #include "../include/aws_client_mock.c"
 
@@ -1035,3 +1037,5 @@ TEST_LIST = {
     { "test_ec2_imds_create_and_destroy" , test_ec2_imds_create_and_destroy},
     { 0 }
 };
+
+#endif

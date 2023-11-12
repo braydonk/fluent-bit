@@ -18,6 +18,8 @@
  *  limitations under the License.
  */
 
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -165,3 +167,5 @@ void flb_test_engine_wildcard(void)
         i++;
     }
 }
+
+#endif

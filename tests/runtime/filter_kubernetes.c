@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#ifdef FLB_HAVE_UNISTD
+
 #define _GNU_SOURCE /* for accept4 */
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
@@ -1084,3 +1086,5 @@ TEST_LIST = {
 #endif
     {NULL, NULL}
 };
+
+#endif

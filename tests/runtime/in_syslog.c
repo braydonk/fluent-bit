@@ -18,6 +18,8 @@
  *  limitations under the License.
  */
 
+#ifndef _WIN32
+
 #include <fluent-bit.h>
 #include <fluent-bit/flb_compat.h>
 #include <fluent-bit/flb_time.h>
@@ -1021,3 +1023,4 @@ TEST_LIST = {
     {NULL, NULL}
 };
 
+#endif

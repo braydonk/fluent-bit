@@ -17,6 +17,8 @@
  *  limitations under the License.
  */
 
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
 #include <fluent-bit/flb_chunk_trace.h>
@@ -152,3 +154,5 @@ TEST_LIST = {
 #endif
     {NULL, NULL}
 };
+
+#endif

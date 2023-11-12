@@ -733,6 +733,17 @@ if(FLB_VALGRIND OR FLB_HAVE_VALGRIND)
   FLB_DEFINITION(FLB_HAVE_VALGRIND)
 endif()
 
+# unistd.h support
+check_c_source_compiles("
+  #include <unistd.h>
+  int main() {
+    return 0;
+  }" FLB_HAVE_UNISTD)
+
+if (FLB_HAVE_UNISTD)
+  FLB_DEFINITION(FLB_HAVE_UNISTD)
+endif()
+
 # fork(2) support
 check_c_source_compiles("
   #include <unistd.h>

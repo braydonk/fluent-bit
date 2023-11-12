@@ -27,6 +27,10 @@
 #include <math.h>
 #include "flb_tests_internal.h"
 
+#ifdef _WIN32
+#include "include/win32/setenv.h"
+#endif
+
 static int msgpack_strncmp(char* str, size_t str_len, msgpack_object obj)
 {
     int ret = -1;
