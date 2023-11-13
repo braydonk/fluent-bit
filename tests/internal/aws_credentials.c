@@ -7,6 +7,10 @@
 
 #include "flb_tests_internal.h"
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 #define ACCESS_KEY "akid"
 #define SECRET_KEY "skid"
 #define TOKEN      "token"
@@ -15,7 +19,6 @@
 #define AWS_ACCESS_KEY_ID              "AWS_ACCESS_KEY_ID"
 #define AWS_SECRET_ACCESS_KEY          "AWS_SECRET_ACCESS_KEY"
 #define AWS_SESSION_TOKEN              "AWS_SESSION_TOKEN"
-
 
 static void unsetenv_credentials()
 {

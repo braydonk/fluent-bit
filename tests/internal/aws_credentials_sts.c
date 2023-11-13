@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_internal.h"
+
 #ifdef FLB_HAVE_UNISTD
 
 #include <fluent-bit/flb_sds.h>
@@ -11,8 +13,6 @@
 #include <monkey/mk_core.h>
 #include <string.h>
 #include <unistd.h>
-
-#include "flb_tests_internal.h"
 
 #define EKS_ACCESS_KEY "eks_akid"
 #define EKS_SECRET_KEY "eks_skid"
@@ -940,4 +940,10 @@ TEST_LIST = {
     { 0 }
 };
 
-#endif
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

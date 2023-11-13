@@ -18,14 +18,14 @@
  *  limitations under the License.
  */
 
+#include "flb_tests_runtime.h"
+
 #ifdef FLB_HAVE_UNISTD
 
 #include <fluent-bit.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-
-#include "flb_tests_runtime.h"
 
 /* Test data*/
 
@@ -168,4 +168,10 @@ void flb_test_engine_wildcard(void)
     }
 }
 
-#endif
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

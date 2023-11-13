@@ -17,26 +17,25 @@
 
 /**
  * This file provides windows wrappers for libc's setenv and unsetenv by using
- * the equivalent functions from winbase.h
+ * the _putenv_s function, which behaves in a similar manner.
  *
  * setenv man page: 
  * https://man7.org/linux/man-pages/man3/setenv.3.html
  * SetEnvironmentVariable docs: 
  * https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setenvironmentvariable
- * 
- * I am not sure why these aren't in Windows' libc.
+ *
  * - Braydon Kains, @braydonk
  */
 
 #ifndef SET_ENV_H_
 #define SET_ENV_H_
 
-#include <stdlib.h>
-
 /**
  * Just in case some silly goose includes it in a non-Windows build.
  */
 #ifdef _WIN32
+
+#include <stdlib.h>
 
 int setenv(char *name, char *value, int overwrite) 
 {
@@ -48,6 +47,6 @@ int unsetenv(char *name)
     return _putenv_s(name, "");
 }
 
-#endif
+#endif /* _WIN32 */
 
-#endif
+#endif /* SET_ENV_H_ */

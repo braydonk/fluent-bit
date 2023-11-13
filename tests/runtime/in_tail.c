@@ -22,6 +22,8 @@
 Approach for this tests is basing on filter_kubernetes tests
 */
 
+#include "flb_tests_runtime.h"
+
 #ifndef _WIN32
 
 #include <fluent-bit.h>
@@ -33,7 +35,6 @@ Approach for this tests is basing on filter_kubernetes tests
 #include <sys/types.h>
 #include <fcntl.h>
 #include <string.h>
-#include "flb_tests_runtime.h"
 
 #define NEW_LINE "\n"
 #define PATH_SEPARATOR "/"
@@ -1584,4 +1585,10 @@ TEST_LIST = {
     {NULL, NULL}
 };
 
-#endif
+#else
+
+TEST_LIST = {
+    {NULL, NULL}
+};
+
+#endif /* _WIN32 */

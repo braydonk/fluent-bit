@@ -1,9 +1,12 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_runtime.h"
+
+#ifndef _WIN32
+
 #include <stdlib.h>
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
-#include "flb_tests_runtime.h"
 #include "../../plugins/filter_aws/aws.h"
 
 #include "../include/aws_client_mock.h"
@@ -844,3 +847,11 @@ TEST_LIST = {
     {"aws_ec2_tags_exclude", flb_test_aws_ec2_tags_exclude},
     {NULL, NULL}
 };
+
+#else
+
+TEST_LIST = {
+    {NULL, NULL}
+};
+
+#endif /* _WIN32 */

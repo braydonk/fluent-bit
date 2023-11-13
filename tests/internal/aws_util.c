@@ -5,6 +5,10 @@
 #include <fluent-bit/flb_mem.h>
 #include <fluent-bit/flb_pthread.h>
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 #include "flb_tests_internal.h"
 
 #define S3_KEY_FORMAT_TAG_PART "logs/$TAG[2]/$TAG[0]/%Y/%m/%d"

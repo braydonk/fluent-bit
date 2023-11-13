@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_internal.h"
+
 #ifdef FLB_HAVE_UNISTD
 
 #include <fluent-bit/flb_info.h>
@@ -16,8 +18,6 @@
 #include <unistd.h>
 #include <math.h> /* for NAN */
 
-
-#include "flb_tests_internal.h"
 
 /* JSON iteration tests */
 #define JSON_SINGLE_MAP1 FLB_TESTS_DATA_PATH "/data/pack/json_single_map_001.json"
@@ -915,4 +915,10 @@ TEST_LIST = {
     { 0 }
 };
 
-#endif
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

@@ -1,12 +1,13 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_runtime.h"
+
 #ifdef FLB_HAVE_UNISTD
 
 #define _GNU_SOURCE /* for accept4 */
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
 #include <fluent-bit/flb_info.h>
-#include "flb_tests_runtime.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -1087,4 +1088,10 @@ TEST_LIST = {
     {NULL, NULL}
 };
 
-#endif
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

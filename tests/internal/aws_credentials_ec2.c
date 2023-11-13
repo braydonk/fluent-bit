@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_internal.h"
+
 #ifdef FLB_HAVE_UNISTD
 
 #include "../include/aws_client_mock.h"
@@ -18,8 +20,6 @@
 #include <monkey/mk_core.h>
 #include <string.h>
 #include <unistd.h>
-
-#include "flb_tests_internal.h"
 
 /* Global variables for tests */
 struct flb_aws_provider *provider;
@@ -1038,4 +1038,10 @@ TEST_LIST = {
     { 0 }
 };
 
-#endif
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

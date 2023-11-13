@@ -6,6 +6,10 @@
 
 #include "flb_tests_internal.h"
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 #define AWS_TEST_DATA_PATH(FILE_PATH) FLB_TESTS_DATA_PATH "data/aws_credentials/" FILE_PATH
 
 static int unset_profile_env()

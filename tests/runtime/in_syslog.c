@@ -18,6 +18,8 @@
  *  limitations under the License.
  */
 
+#include "flb_tests_runtime.h"
+
 #ifndef _WIN32
 
 #include <fluent-bit.h>
@@ -32,7 +34,6 @@
 #include <sys/un.h>
 #endif
 #include <fcntl.h>
-#include "flb_tests_runtime.h"
 
 #define DPATH            FLB_TESTS_DATA_PATH "/data/common"
 
@@ -1023,4 +1024,10 @@ TEST_LIST = {
     {NULL, NULL}
 };
 
-#endif
+#else
+
+TEST_LIST = {
+    {NULL, NULL}
+};
+
+#endif /* _WIN32 */

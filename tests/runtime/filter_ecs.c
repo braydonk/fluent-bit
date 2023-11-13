@@ -4,6 +4,10 @@
 #include <fluent-bit/flb_sds.h>
 #include "flb_tests_runtime.h"
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 #define ERROR_RESPONSE "NOT FOUND"
 
 

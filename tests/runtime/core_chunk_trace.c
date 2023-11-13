@@ -17,6 +17,8 @@
  *  limitations under the License.
  */
 
+#include "flb_tests_runtime.h"
+
 #ifdef FLB_HAVE_UNISTD
 
 #include <fluent-bit.h>
@@ -26,8 +28,6 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "flb_tests_runtime.h"
-
 
 struct callback_record {
     void *data;
@@ -153,6 +153,12 @@ TEST_LIST = {
     {"trace",    flb_test_trace},
 #endif
     {NULL, NULL}
+};
+
+#else
+
+TEST_LIST = {
+    { 0 }
 };
 
 #endif

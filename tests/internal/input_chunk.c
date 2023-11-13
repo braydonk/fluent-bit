@@ -1,5 +1,7 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_internal.h"
+
 #ifdef FLB_HAVE_UNISTD
 
 #include <fluent-bit.h>
@@ -11,7 +13,6 @@
 #include <fluent-bit/flb_storage.h>
 #include <fluent-bit/flb_router.h>
 #include <fluent-bit/flb_time.h>
-#include "flb_tests_internal.h"
 #include "chunkio/chunkio.h"
 #include "data/input_chunk/log/test_buffer_drop_chunks.h"
 
@@ -517,4 +518,10 @@ TEST_LIST = {
     {NULL, NULL}
 };
 
-#endif
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */
