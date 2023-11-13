@@ -211,7 +211,7 @@ static void test_ctx_destroy(struct test_ctx *ctx)
     flb_free(ctx);
 }
 
-void flb_test_splunk_health()
+void flb_test_splunk_health(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -360,12 +360,12 @@ void flb_test_splunk(int port, char *endpoint)
     test_ctx_destroy(ctx);
 }
 
-void flb_test_splunk_collector()
+void flb_test_splunk_collector(void)
 {
     flb_test_splunk(8809, "/services/collector");
 }
 
-void flb_test_splunk_collector_event()
+void flb_test_splunk_collector_event(void)
 {
     flb_test_splunk(8810, "/services/collector/event");
 }
@@ -446,7 +446,7 @@ void flb_test_splunk_raw(int port)
     test_ctx_destroy(ctx);
 }
 
-void flb_test_splunk_collector_raw()
+void flb_test_splunk_collector_raw(void)
 {
     flb_test_splunk_raw(8811);
 }
@@ -531,12 +531,12 @@ void flb_test_splunk_raw_multilines(int port)
     test_ctx_destroy(ctx);
 }
 
-void flb_test_splunk_collector_raw_multilines()
+void flb_test_splunk_collector_raw_multilines(void)
 {
     flb_test_splunk_raw_multilines(8812);
 }
 
-void flb_test_splunk_tag_key()
+void flb_test_splunk_tag_key(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -705,12 +705,12 @@ void flb_test_splunk_gzip(int port, char *endpoint)
     test_ctx_destroy(ctx);
 }
 
-void flb_test_splunk_collector_gzip()
+void flb_test_splunk_collector_gzip(void)
 {
     flb_test_splunk_gzip(8813, "/services/collector");
 }
 
-void flb_test_splunk_collector_event_gzip()
+void flb_test_splunk_collector_event_gzip(void)
 {
     flb_test_splunk_gzip(8814, "/services/collector/event");
 }
@@ -805,7 +805,7 @@ void flb_test_splunk_raw_multilines_gzip(int port)
     test_ctx_destroy(ctx);
 }
 
-void flb_test_splunk_collector_raw_multilines_gzip()
+void flb_test_splunk_collector_raw_multilines_gzip(void)
 {
     flb_test_splunk_raw_multilines_gzip(8815);
 }

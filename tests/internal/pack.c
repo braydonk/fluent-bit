@@ -1,5 +1,9 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_internal.h"
+
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit/flb_info.h>
 #include <fluent-bit/flb_mem.h>
 #include <fluent-bit/flb_pack.h>
@@ -14,8 +18,6 @@
 #include <unistd.h>
 #include <math.h> /* for NAN */
 
-
-#include "flb_tests_internal.h"
 
 /* JSON iteration tests */
 #define JSON_SINGLE_MAP1 FLB_TESTS_DATA_PATH "/data/pack/json_single_map_001.json"
@@ -42,7 +44,7 @@ static inline void consume_bytes(char *buf, int bytes, int length)
 }
 
 /* Pack a simple JSON map */
-void test_json_pack()
+void test_json_pack(void)
 {
     int ret;
     int root_type;
@@ -64,7 +66,7 @@ void test_json_pack()
 }
 
 /* Pack a simple JSON map using a state */
-void test_json_pack_iter()
+void test_json_pack_iter(void)
 {
     int i;
     int ret;
@@ -97,7 +99,7 @@ void test_json_pack_iter()
 }
 
 /* Pack two concatenated JSON maps using a state */
-void test_json_pack_mult()
+void test_json_pack_mult(void)
 
 {
     int ret;
@@ -163,7 +165,7 @@ void test_json_pack_mult()
 }
 
 /* Pack two concatenated JSON maps byte by byte using a state */
-void test_json_pack_mult_iter()
+void test_json_pack_mult_iter(void)
 
 {
     int i;
@@ -243,7 +245,7 @@ void test_json_pack_mult_iter()
 }
 
 /* Validate default values of macros used in flb_msgpack_raw_to_json_sds */
-void test_msgpack_to_json_macros()
+void test_msgpack_to_json_macros(void)
 {
     /* Verify default values */
     TEST_CHECK(FLB_MSGPACK_TO_JSON_INIT_BUFFER_SIZE == 2.0);
@@ -251,7 +253,7 @@ void test_msgpack_to_json_macros()
 }
 
 /* Validate that duplicated keys are removed */
-void test_json_dup_keys()
+void test_json_dup_keys(void)
 {
     int ret;
     int type;
@@ -294,7 +296,7 @@ void test_json_dup_keys()
     flb_free(data_out);
 }
 
-void test_json_pack_bug342()
+void test_json_pack_bug342(void)
 {
     int i = 0;
     int records = 0;
@@ -520,7 +522,7 @@ void test_utf8_to_json()
     utf8_tests_destroy(n_tests);
 }
 
-void test_json_pack_bug1278()
+void test_json_pack_bug1278(void)
 {
     int i;
     int len;
@@ -635,7 +637,7 @@ void test_json_pack_bug1278()
     }
 }
 
-void test_json_pack_nan()
+void test_json_pack_nan(void)
 {
     int ret;
     char json_str[128] = {0};
@@ -752,7 +754,7 @@ static int check_msgpack_val(msgpack_object obj, int expected_type, char *expect
  * Pack "valid JSON + partial JSON"
  */
 #define JSON_BUG5336 "{\"int\":10, \"string\":\"hello\", \"bool\":true, \"array\":[0,1,2]}"
-void test_json_pack_bug5336()
+void test_json_pack_bug5336(void)
 {
     int ret;
     char *json_valid = JSON_BUG5336;
@@ -865,27 +867,27 @@ void test_json_date(char* expect, int date_format)
     flb_sds_destroy(ret);
 }
 
-void test_json_date_iso8601()
+void test_json_date_iso8601(void)
 {
     test_json_date("1973-11-29T21:33:09.123456Z", FLB_PACK_JSON_DATE_ISO8601);
 }
 
-void test_json_date_double()
+void test_json_date_double(void)
 {
     test_json_date("123456789.123456", FLB_PACK_JSON_DATE_DOUBLE);
 }
 
-void test_json_date_java_sql()
+void test_json_date_java_sql(void)
 {
     test_json_date("1973-11-29 21:33:09.123456", FLB_PACK_JSON_DATE_JAVA_SQL_TIMESTAMP);
 }
 
-void test_json_date_epoch()
+void test_json_date_epoch(void)
 {
     test_json_date("123456789", FLB_PACK_JSON_DATE_EPOCH);
 }
 
-void test_json_date_epoch_ms()
+void test_json_date_epoch_ms(void)
 {
     test_json_date("123456789123", FLB_PACK_JSON_DATE_EPOCH_MS);
 }
@@ -912,3 +914,11 @@ TEST_LIST = {
     { "utf8_to_json", test_utf8_to_json},
     { 0 }
 };
+
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

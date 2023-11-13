@@ -1,9 +1,12 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_runtime.h"
+
+#ifndef _WIN32
+
 #include <stdlib.h>
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
-#include "flb_tests_runtime.h"
 #include "../../plugins/filter_aws/aws.h"
 
 #include "../include/aws_client_mock.h"
@@ -42,7 +45,7 @@ int callback_test(void* data, size_t size, void* cb_data)
     return 0;
 }
 
-void flb_test_aws_ec2_tags_present() {
+void flb_test_aws_ec2_tags_present(void) {
     int ret;
     int bytes;
     char *p = "[0, {\"log\": \"hello, from my ec2 instance\"}]";
@@ -170,7 +173,7 @@ void flb_test_aws_ec2_tags_present() {
     set_output(NULL);
 }
 
-void flb_test_aws_ec2_tags_404() {
+void flb_test_aws_ec2_tags_404(void) {
     int ret;
     int bytes;
     char *p = "[0, {\"log\": \"hello, from my ec2 instance\"}]";
@@ -271,7 +274,7 @@ void flb_test_aws_ec2_tags_404() {
     set_output(NULL);
 }
 
-void flb_test_aws_ec2_tags_list_500() {
+void flb_test_aws_ec2_tags_list_500(void) {
     int ret;
     int bytes;
     char *p = "[0, {\"log\": \"hello, from my ec2 instance\"}]";
@@ -369,7 +372,7 @@ void flb_test_aws_ec2_tags_list_500() {
     set_output(NULL);
 }
 
-void flb_test_aws_ec2_tags_value_404() {
+void flb_test_aws_ec2_tags_value_404(void) {
      int ret;
     int bytes;
     char *p = "[0, {\"log\": \"hello, from my ec2 instance\"}]";
@@ -481,7 +484,7 @@ void flb_test_aws_ec2_tags_value_404() {
     set_output(NULL);
 }
 
-void flb_test_aws_ec2_tags_value_500() {
+void flb_test_aws_ec2_tags_value_500(void) {
      int ret;
     int bytes;
     char *p = "[0, {\"log\": \"hello, from my ec2 instance\"}]";
@@ -593,7 +596,7 @@ void flb_test_aws_ec2_tags_value_500() {
     set_output(NULL);
 }
 
-void flb_test_aws_ec2_tags_include() {
+void flb_test_aws_ec2_tags_include(void) {
     int ret;
     int bytes;
     char *p = "[0, {\"log\": \"hello, from my ec2 instance\"}]";
@@ -713,7 +716,7 @@ void flb_test_aws_ec2_tags_include() {
     set_output(NULL);
 }
 
-void flb_test_aws_ec2_tags_exclude() {
+void flb_test_aws_ec2_tags_exclude(void) {
     int ret;
     int bytes;
     char *p = "[0, {\"log\": \"hello, from my ec2 instance\"}]";
@@ -844,3 +847,11 @@ TEST_LIST = {
     {"aws_ec2_tags_exclude", flb_test_aws_ec2_tags_exclude},
     {NULL, NULL}
 };
+
+#else
+
+TEST_LIST = {
+    {NULL, NULL}
+};
+
+#endif /* _WIN32 */

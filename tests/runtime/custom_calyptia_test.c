@@ -6,7 +6,7 @@
 
 flb_sds_t custom_calyptia_pipeline_config_get(struct flb_config *ctx);
 
-void flb_custom_calyptia_pipeline_config_get_test()
+void flb_custom_calyptia_pipeline_config_get_test(void)
 {
     const char *cfg_str = "[INPUT]\n    name dummy.0\n[INPUT]\n    name fluentbit_metrics.1\n    tag _calyptia_cloud\n    scrape_on_start true\n    scrape_interval 30\n\n\n[OUTPUT]\n    name  stdout.0\n    match *\n    retry_limit 1\n\n";
     flb_ctx_t *ctx;

@@ -17,13 +17,15 @@
  *  limitations under the License.
  */
 
+#include "flb_tests_runtime.h"
+
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "flb_tests_runtime.h"
-
 
 int64_t result_time;
 static inline int64_t set_result(int64_t v)
@@ -662,3 +664,10 @@ TEST_LIST = {
     {NULL, NULL}
 };
 
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

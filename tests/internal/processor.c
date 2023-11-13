@@ -57,7 +57,7 @@ static int create_msgpack_records(char **out_buf, size_t *out_size)
     return 0;
 }
 
-static void processor()
+static void processor(void)
 {
     int ret;
     struct flb_processor *proc;

@@ -186,7 +186,7 @@ static flb_sockfd_t connect_tcp(char *in_host, int in_port)
     return fd;
 }
 
-void flb_test_forward()
+void flb_test_forward(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -245,7 +245,7 @@ void flb_test_forward()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_forward_port()
+void flb_test_forward_port(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -312,7 +312,7 @@ void flb_test_forward_port()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_tag_prefix()
+void flb_test_tag_prefix(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -378,7 +378,7 @@ void flb_test_tag_prefix()
 }
 
 #ifdef FLB_HAVE_UNIX_SOCKET
-void flb_test_unix_path()
+void flb_test_unix_path(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -461,7 +461,7 @@ void flb_test_unix_path()
 }
 
 
-void flb_test_unix_perm()
+void flb_test_unix_perm(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;

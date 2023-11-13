@@ -2,6 +2,10 @@
 #include <fluent-bit.h>
 #include "flb_tests_runtime.h"
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 /* Test data */
 #include "data/td/json_td.h" /* JSON_TD */
 
@@ -10,7 +14,7 @@
 #define ERROR_UNKNOWN "{\"__type\":\"UNKNOWN\"}"
 
 /* It writes a big JSON message (copied from TD test) */
-void flb_test_firehose_success(void)
+void flb_test_firehose_success(voidvoid)
 {
     int ret;
     flb_ctx_t *ctx;
@@ -44,7 +48,7 @@ void flb_test_firehose_success(void)
     flb_destroy(ctx);
 }
 
-void flb_test_firehose_partial_success(void)
+void flb_test_firehose_partial_success(voidvoid)
 {
     int ret;
     flb_ctx_t *ctx;
@@ -80,7 +84,7 @@ void flb_test_firehose_partial_success(void)
     unsetenv("PARTIAL_SUCCESS_CASE");
 }
 
-void flb_test_firehose_throughput_error(void)
+void flb_test_firehose_throughput_error(voidvoid)
 {
     int ret;
     flb_ctx_t *ctx;
@@ -116,7 +120,7 @@ void flb_test_firehose_throughput_error(void)
     unsetenv("TEST_PUT_RECORD_BATCH_ERROR");
 }
 
-void flb_test_firehose_error_unknown(void)
+void flb_test_firehose_error_unknown(voidvoid)
 {
     int ret;
     flb_ctx_t *ctx;
@@ -152,7 +156,7 @@ void flb_test_firehose_error_unknown(void)
     unsetenv("TEST_PUT_RECORD_BATCH_ERROR");
 }
 
-void flb_test_firehose_nonsense_error(void)
+void flb_test_firehose_nonsense_error(voidvoid)
 {
     int ret;
     flb_ctx_t *ctx;

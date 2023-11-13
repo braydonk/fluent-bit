@@ -37,7 +37,7 @@ static void flb_aws_compress_truncate_b64_test_cases__gzip_decode(
                                                     size_t max_out_len);
 
 /** ------ Test Cases ------ **/
-void test_compression_gzip()
+void test_compression_gzip(void)
 {
     struct flb_aws_test_case cases[] =
     {
@@ -53,7 +53,7 @@ void test_compression_gzip()
     flb_aws_compress_test_cases(cases);
 }
 
-void test_b64_truncated_gzip()
+void test_b64_truncated_gzip(void)
 {
 struct flb_aws_test_case cases[] =
     {
@@ -70,7 +70,7 @@ struct flb_aws_test_case cases[] =
         41);
 }
 
-void test_b64_truncated_gzip_truncation()
+void test_b64_truncated_gzip_truncation(void)
 {
 struct flb_aws_test_case cases[] =
     {
@@ -115,7 +115,7 @@ struct flb_aws_test_case cases[] =
         381);
 }
 
-void test_b64_truncated_gzip_truncation_buffer_too_small()
+void test_b64_truncated_gzip_truncation_buffer_too_small(void)
 {
 struct flb_aws_test_case cases[] =
     {
@@ -143,7 +143,7 @@ struct flb_aws_test_case cases[] =
         14);
 }
 
-void test_b64_truncated_gzip_truncation_edge()
+void test_b64_truncated_gzip_truncation_edge(void)
 {
 struct flb_aws_test_case cases[] =
     {
@@ -166,7 +166,7 @@ struct flb_aws_test_case cases[] =
         51);
 }
 
-void test_b64_truncated_gzip_truncation_multi_rounds()
+void test_b64_truncated_gzip_truncation_multi_rounds(void)
 {
 struct flb_aws_test_case cases[] =
     {

@@ -2246,7 +2246,7 @@ static void cb_check_timestamp_format_duo_fields_incorrect_type(void *ctx, int f
     flb_sds_destroy(res_data);
 }
 
-void flb_test_monitored_resource_common()
+void flb_test_monitored_resource_common(void)
 {
     int ret;
     int size = sizeof(MONITORED_RESOURCE_COMMON_CASE) - 1;
@@ -2287,7 +2287,7 @@ void flb_test_monitored_resource_common()
     flb_destroy(ctx);
 }
 
-void flb_test_monitored_resource_priority_higher_than_local_resource_id()
+void flb_test_monitored_resource_priority_higher_than_local_resource_id(void)
 {
     int ret;
     int size = sizeof(MONITORED_RESOURCE_PRIORITY_HIGHER_THAN_LOCAL_RESOURCE_ID) - 1;
@@ -2330,7 +2330,7 @@ void flb_test_monitored_resource_priority_higher_than_local_resource_id()
     flb_destroy(ctx);
 }
 
-void flb_test_monitored_resource_priority_higher_than_gce_instance()
+void flb_test_monitored_resource_priority_higher_than_gce_instance(void)
 {
     int ret;
     int size = sizeof(MONITORED_RESOURCE_PRIORITY_HIGHER_THAN_GCE_INSTANCE) - 1;
@@ -2371,7 +2371,7 @@ void flb_test_monitored_resource_priority_higher_than_gce_instance()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_global()
+void flb_test_resource_global(void)
 {
     int ret;
     int size = sizeof(JSON) - 1;
@@ -2412,7 +2412,7 @@ void flb_test_resource_global()
     flb_destroy(ctx);
 }
 
-void flb_test_trace_no_autoformat()
+void flb_test_trace_no_autoformat(void)
 {
     int ret;
     int size = sizeof(TRACE_COMMON_CASE) - 1;
@@ -2453,7 +2453,7 @@ void flb_test_trace_no_autoformat()
     flb_destroy(ctx);
 }
 
-void flb_test_trace_stackdriver_autoformat()
+void flb_test_trace_stackdriver_autoformat(void)
 {
     int ret;
     int size = sizeof(TRACE_COMMON_CASE) - 1;
@@ -2495,7 +2495,7 @@ void flb_test_trace_stackdriver_autoformat()
     flb_destroy(ctx);
 }
 
-void flb_test_span_id()
+void flb_test_span_id(void)
 {
     int ret;
     int size = sizeof(SPAN_ID_COMMON_CASE) - 1;
@@ -2535,7 +2535,7 @@ void flb_test_span_id()
     flb_destroy(ctx);
 }
 
-void flb_test_trace_sampled_true()
+void flb_test_trace_sampled_true(void)
 {
     int ret;
     int size = sizeof(TRACE_SAMPLED_CASE_TRUE) - 1;
@@ -2575,7 +2575,7 @@ void flb_test_trace_sampled_true()
     flb_destroy(ctx);
 }
 
-void flb_test_trace_sampled_false()
+void flb_test_trace_sampled_false(void)
 {
     int ret;
     int size = sizeof(TRACE_SAMPLED_CASE_FALSE) - 1;
@@ -2615,7 +2615,7 @@ void flb_test_trace_sampled_false()
     flb_destroy(ctx);
 }
 
-void flb_test_set_metadata_server()
+void flb_test_set_metadata_server(void)
 {
     int ret;
     int size = sizeof(JSON) - 1;
@@ -2656,7 +2656,7 @@ void flb_test_set_metadata_server()
     flb_destroy(ctx);
 }
 
-void flb_test_log_name_override()
+void flb_test_log_name_override(void)
 {
     int ret;
     int size = sizeof(LOG_NAME_OVERRIDE) - 1;
@@ -2672,7 +2672,7 @@ void flb_test_log_name_override()
     in_ffd = flb_input(ctx, (char *) "lib", NULL);
     flb_input_set(ctx, in_ffd, "tag", "test", NULL);
 
-    /* Stackdriver output */
+    /void* Stackdriver output */
     out_ffd = flb_output(ctx, (char *) "stackdriver", NULL);
     flb_output_set(ctx, out_ffd,
                    "match", "test",
@@ -2697,7 +2697,7 @@ void flb_test_log_name_override()
     flb_destroy(ctx);
 }
 
-void flb_test_log_name_no_override()
+void flb_test_log_name_no_override(void)
 {
     int ret;
     int size = sizeof(LOG_NAME_NO_OVERRIDE) - 1;
@@ -2738,7 +2738,7 @@ void flb_test_log_name_no_override()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_global_custom_prefix()
+void flb_test_resource_global_custom_prefix(void)
 {
     /* configuring tag_prefix for non-k8s resource type should have no effect at all */
     int ret;
@@ -2781,7 +2781,7 @@ void flb_test_resource_global_custom_prefix()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_generic_node_creds()
+void flb_test_resource_generic_node_creds(void)
 {
     int ret;
     int size = sizeof(JSON) - 1;
@@ -2825,7 +2825,7 @@ void flb_test_resource_generic_node_creds()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_generic_node_metadata()
+void flb_test_resource_generic_node_metadata(void)
 {
     int ret;
     int size = sizeof(JSON) - 1;
@@ -2868,7 +2868,7 @@ void flb_test_resource_generic_node_metadata()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_generic_task_creds()
+void flb_test_resource_generic_task_creds(void)
 {
     int ret;
     int size = sizeof(JSON) - 1;
@@ -2913,7 +2913,7 @@ void flb_test_resource_generic_task_creds()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_generic_task_metadata()
+void flb_test_resource_generic_task_metadata(void)
 {
     int ret;
     int size = sizeof(JSON) - 1;
@@ -2957,7 +2957,7 @@ void flb_test_resource_generic_task_metadata()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_gce_instance()
+void flb_test_resource_gce_instance(void)
 {
     int ret;
     int size = sizeof(JSON) - 1;
@@ -2997,7 +2997,7 @@ void flb_test_resource_gce_instance()
     flb_destroy(ctx);
 }
 
-void flb_test_insert_id_common_case()
+void flb_test_insert_id_common_case(void)
 {
     int ret;
     int size = sizeof(INSERTID_COMMON_CASE) - 1;
@@ -3037,7 +3037,7 @@ void flb_test_insert_id_common_case()
     flb_destroy(ctx);
 }
 
-void flb_test_empty_insert_id()
+void flb_test_empty_insert_id(void)
 {
     int ret;
     int size = sizeof(EMPTY_INSERTID) - 1;
@@ -3077,7 +3077,7 @@ void flb_test_empty_insert_id()
     flb_destroy(ctx);
 }
 
-void flb_test_insert_id_incorrect_type()
+void flb_test_insert_id_incorrect_type(void)
 {
     int ret;
     int size = sizeof(INSERTID_INCORRECT_TYPE_INT) - 1;
@@ -3117,7 +3117,7 @@ void flb_test_insert_id_incorrect_type()
     flb_destroy(ctx);
 }
 
-void flb_test_operation_common()
+void flb_test_operation_common(void)
 {
     int ret;
     int size = sizeof(OPERATION_COMMON_CASE) - 1;
@@ -3157,7 +3157,7 @@ void flb_test_operation_common()
     flb_destroy(ctx);
 }
 
-void flb_test_empty_operation()
+void flb_test_empty_operation(void)
 {
     int ret;
     int size = sizeof(EMPTY_OPERATION) - 1;
@@ -3197,7 +3197,7 @@ void flb_test_empty_operation()
     flb_destroy(ctx);
 }
 
-void flb_test_operation_in_string()
+void flb_test_operation_in_string(void)
 {
     int ret;
     int size = sizeof(OPERATION_IN_STRING) - 1;
@@ -3237,7 +3237,7 @@ void flb_test_operation_in_string()
     flb_destroy(ctx);
 }
 
-void flb_test_operation_partial_subfields()
+void flb_test_operation_partial_subfields(void)
 {
     int ret;
     int size = sizeof(PARTIAL_SUBFIELDS) - 1;
@@ -3277,7 +3277,7 @@ void flb_test_operation_partial_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_operation_incorrect_type_subfields()
+void flb_test_operation_incorrect_type_subfields(void)
 {
     int ret;
     int size = sizeof(SUBFIELDS_IN_INCORRECT_TYPE) - 1;
@@ -3317,7 +3317,7 @@ void flb_test_operation_incorrect_type_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_operation_extra_subfields()
+void flb_test_operation_extra_subfields(void)
 {
     int ret;
     int size = sizeof(EXTRA_SUBFIELDS_EXISTED) - 1;
@@ -3357,7 +3357,7 @@ void flb_test_operation_extra_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_container_common()
+void flb_test_resource_k8s_container_common(void)
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_COMMON) - 1;
@@ -3400,7 +3400,7 @@ void flb_test_resource_k8s_container_common()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_container_multi_tag_value()
+void flb_test_resource_k8s_container_multi_tag_value(void)
 {
     int ret;
     int size_one = sizeof(K8S_CONTAINER_COMMON) - 1;
@@ -3454,7 +3454,7 @@ void flb_test_resource_k8s_container_multi_tag_value()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_container_custom_tag_prefix()
+void flb_test_resource_k8s_container_custom_tag_prefix(void)
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_NO_LOCAL_RESOURCE_ID) - 1;
@@ -3498,7 +3498,7 @@ void flb_test_resource_k8s_container_custom_tag_prefix()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_container_custom_tag_prefix_with_dot()
+void flb_test_resource_k8s_container_custom_tag_prefix_with_dot(void)
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_NO_LOCAL_RESOURCE_ID) - 1;
@@ -3542,7 +3542,7 @@ void flb_test_resource_k8s_container_custom_tag_prefix_with_dot()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_container_default_tag_regex()
+void flb_test_resource_k8s_container_default_tag_regex(void)
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_NO_LOCAL_RESOURCE_ID) - 1;
@@ -3587,7 +3587,7 @@ void flb_test_resource_k8s_container_default_tag_regex()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_container_custom_k8s_regex()
+void flb_test_resource_k8s_container_custom_k8s_regex(void)
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_NO_LOCAL_RESOURCE_ID) - 1;
@@ -3632,7 +3632,7 @@ void flb_test_resource_k8s_container_custom_k8s_regex()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_container_custom_k8s_regex_custom_prefix()
+void flb_test_resource_k8s_container_custom_k8s_regex_custom_prefix(void)
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_NO_LOCAL_RESOURCE_ID) - 1;
@@ -3678,7 +3678,7 @@ void flb_test_resource_k8s_container_custom_k8s_regex_custom_prefix()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_node_common()
+void flb_test_resource_k8s_node_common(void)
 {
     int ret;
     int size = sizeof(K8S_NODE_COMMON) - 1;
@@ -3721,7 +3721,7 @@ void flb_test_resource_k8s_node_common()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_pod_common()
+void flb_test_resource_k8s_pod_common(void)
 {
     int ret;
     int size = sizeof(K8S_POD_COMMON) - 1;
@@ -3764,7 +3764,7 @@ void flb_test_resource_k8s_pod_common()
     flb_destroy(ctx);
 }
 
-void flb_test_default_labels()
+void flb_test_default_labels(void)
 {
     int ret;
     int size = sizeof(DEFAULT_LABELS) - 1;
@@ -3805,7 +3805,7 @@ void flb_test_default_labels()
     flb_destroy(ctx);
 }
 
-void flb_test_custom_labels()
+void flb_test_custom_labels(void)
 {
     int ret;
     int size = sizeof(CUSTOM_LABELS) - 1;
@@ -3847,7 +3847,7 @@ void flb_test_custom_labels()
     flb_destroy(ctx);
 }
 
-void flb_test_config_labels_conflict()
+void flb_test_config_labels_conflict(void)
 {
     int ret;
     int size = sizeof(DEFAULT_LABELS) - 1;
@@ -3889,7 +3889,7 @@ void flb_test_config_labels_conflict()
     flb_destroy(ctx);
 }
 
-void flb_test_config_labels_no_conflict()
+void flb_test_config_labels_no_conflict(void)
 {
     int ret;
     int size = sizeof(DEFAULT_LABELS) - 1;
@@ -3931,7 +3931,7 @@ void flb_test_config_labels_no_conflict()
     flb_destroy(ctx);
 }
 
-void flb_test_default_labels_k8s_resource_type()
+void flb_test_default_labels_k8s_resource_type(void)
 {
     int ret;
     int size = sizeof(DEFAULT_LABELS_K8S_RESOURCE_TYPE) - 1;
@@ -3974,7 +3974,7 @@ void flb_test_default_labels_k8s_resource_type()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_one_field()
+void flb_test_resource_labels_one_field(void)
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4015,7 +4015,7 @@ void flb_test_resource_labels_one_field()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_plaintext()
+void flb_test_resource_labels_plaintext(void)
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4056,7 +4056,7 @@ void flb_test_resource_labels_plaintext()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_multiple_fields()
+void flb_test_resource_labels_multiple_fields(void)
 {
     int ret;
     int size = sizeof(MULTIPLE_FIELDS) - 1;
@@ -4097,7 +4097,7 @@ void flb_test_resource_labels_multiple_fields()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_nested_fields()
+void flb_test_resource_labels_nested_fields(void)
 {
     int ret;
     int size = sizeof(NESTED_FIELDS) - 1;
@@ -4138,7 +4138,7 @@ void flb_test_resource_labels_nested_fields()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_layered_nested_fields()
+void flb_test_resource_labels_layered_nested_fields(void)
 {
     int ret;
     int size = sizeof(LAYERED_NESTED_FIELDS) - 1;
@@ -4180,7 +4180,7 @@ void flb_test_resource_labels_layered_nested_fields()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_original_does_not_exist()
+void flb_test_resource_labels_original_does_not_exist(void)
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4221,7 +4221,7 @@ void flb_test_resource_labels_original_does_not_exist()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_nested_original_does_not_exist()
+void flb_test_resource_labels_nested_original_does_not_exist(void)
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4262,7 +4262,7 @@ void flb_test_resource_labels_nested_original_does_not_exist()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_nested_original_partially_exists()
+void flb_test_resource_labels_nested_original_partially_exists(void)
 {
     int ret;
     int size = sizeof(NESTED_FIELDS) - 1;
@@ -4303,7 +4303,7 @@ void flb_test_resource_labels_nested_original_partially_exists()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_one_field_with_spaces()
+void flb_test_resource_labels_one_field_with_spaces(void)
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4344,7 +4344,7 @@ void flb_test_resource_labels_one_field_with_spaces()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_multiple_fields_with_spaces()
+void flb_test_resource_labels_multiple_fields_with_spaces(void)
 {
     int ret;
     int size = sizeof(MULTIPLE_FIELDS) - 1;
@@ -4385,7 +4385,7 @@ void flb_test_resource_labels_multiple_fields_with_spaces()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_empty_input()
+void flb_test_resource_labels_empty_input(void)
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4426,7 +4426,7 @@ void flb_test_resource_labels_empty_input()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_duplicate_assignment()
+void flb_test_resource_labels_duplicate_assignment(void)
 {
     int ret;
     int size = sizeof(MULTIPLE_FIELDS) - 1;
@@ -4467,7 +4467,7 @@ void flb_test_resource_labels_duplicate_assignment()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_project_id_not_overridden()
+void flb_test_resource_labels_project_id_not_overridden(void)
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4508,7 +4508,7 @@ void flb_test_resource_labels_project_id_not_overridden()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_has_priority() 
+void flb_test_resource_labels_has_priority(void) 
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4553,7 +4553,7 @@ void flb_test_resource_labels_has_priority()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_fallsback_when_required_not_specified() 
+void flb_test_resource_labels_fallsback_when_required_not_specified(void) 
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_COMMON) - 1;
@@ -4597,7 +4597,7 @@ void flb_test_resource_labels_fallsback_when_required_not_specified()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_fallsback_when_required_partially_specified() 
+void flb_test_resource_labels_fallsback_when_required_partially_specified(void) 
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_COMMON) - 1;
@@ -4641,7 +4641,7 @@ void flb_test_resource_labels_fallsback_when_required_partially_specified()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_k8s_container() 
+void flb_test_resource_labels_k8s_container(void) 
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4684,7 +4684,7 @@ void flb_test_resource_labels_k8s_container()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_k8s_node() 
+void flb_test_resource_labels_k8s_node(void) 
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4727,7 +4727,7 @@ void flb_test_resource_labels_k8s_node()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_k8s_pod() 
+void flb_test_resource_labels_k8s_pod(void) 
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4770,7 +4770,7 @@ void flb_test_resource_labels_k8s_pod()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_generic_node() 
+void flb_test_resource_labels_generic_node(void) 
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4813,7 +4813,7 @@ void flb_test_resource_labels_generic_node()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_labels_generic_task() 
+void flb_test_resource_labels_generic_task(void) 
 {
     int ret;
     int size = sizeof(ONE_FIELD) - 1;
@@ -4856,7 +4856,7 @@ void flb_test_resource_labels_generic_task()
     flb_destroy(ctx);
 }
 
-void flb_test_custom_labels_k8s_resource_type()
+void flb_test_custom_labels_k8s_resource_type(void)
 {
     int ret;
     int size = sizeof(CUSTOM_LABELS_K8S_RESOURCE_TYPE) - 1;
@@ -4900,7 +4900,7 @@ void flb_test_custom_labels_k8s_resource_type()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_container_no_local_resource_id()
+void flb_test_resource_k8s_container_no_local_resource_id(void)
 {
     int ret;
     int size = sizeof(K8S_CONTAINER_NO_LOCAL_RESOURCE_ID) - 1;
@@ -4944,7 +4944,7 @@ void flb_test_resource_k8s_container_no_local_resource_id()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_node_no_local_resource_id()
+void flb_test_resource_k8s_node_no_local_resource_id(void)
 {
     int ret;
     int size = sizeof(K8S_NODE_NO_LOCAL_RESOURCE_ID) - 1;
@@ -4987,7 +4987,7 @@ void flb_test_resource_k8s_node_no_local_resource_id()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_node_custom_k8s_regex_with_dot()
+void flb_test_resource_k8s_node_custom_k8s_regex_with_dot(void)
 {
     int ret;
     int size = sizeof(K8S_NODE_LOCAL_RESOURCE_ID_WITH_DOT) - 1;
@@ -5031,7 +5031,7 @@ void flb_test_resource_k8s_node_custom_k8s_regex_with_dot()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_node_custom_k8s_regex_with_long_tag()
+void flb_test_resource_k8s_node_custom_k8s_regex_with_long_tag(void)
 {
     int ret;
     int size = sizeof(K8S_NODE_LOCAL_RESOURCE_ID_WITH_DOT) - 1;
@@ -5075,7 +5075,7 @@ void flb_test_resource_k8s_node_custom_k8s_regex_with_long_tag()
     flb_destroy(ctx);
 }
 
-void flb_test_resource_k8s_pod_no_local_resource_id()
+void flb_test_resource_k8s_pod_no_local_resource_id(void)
 {
     int ret;
     int size = sizeof(K8S_POD_NO_LOCAL_RESOURCE_ID) - 1;
@@ -5118,7 +5118,7 @@ void flb_test_resource_k8s_pod_no_local_resource_id()
     flb_destroy(ctx);
 }
 
-void flb_test_multi_entries_severity()
+void flb_test_multi_entries_severity(void)
 {
     int ret;
     flb_ctx_t *ctx;
@@ -5163,7 +5163,7 @@ void flb_test_multi_entries_severity()
     flb_destroy(ctx);
 }
 
-void flb_test_source_location_common_case()
+void flb_test_source_location_common_case(void)
 {
     int ret;
     int size = sizeof(SOURCELOCATION_COMMON_CASE) - 1;
@@ -5203,7 +5203,7 @@ void flb_test_source_location_common_case()
     flb_destroy(ctx);
 }
 
-void flb_test_source_location_line_in_string()
+void flb_test_source_location_line_in_string(void)
 {
     int ret;
     int size = sizeof(SOURCELOCATION_COMMON_CASE_LINE_IN_STRING) - 1;
@@ -5243,7 +5243,7 @@ void flb_test_source_location_line_in_string()
     flb_destroy(ctx);
 }
 
-void flb_test_empty_source_location()
+void flb_test_empty_source_location(void)
 {
     int ret;
     int size = sizeof(EMPTY_SOURCELOCATION) - 1;
@@ -5283,7 +5283,7 @@ void flb_test_empty_source_location()
     flb_destroy(ctx);
 }
 
-void flb_test_source_location_in_string()
+void flb_test_source_location_in_string(void)
 {
     int ret;
     int size = sizeof(SOURCELOCATION_IN_STRING) - 1;
@@ -5323,7 +5323,7 @@ void flb_test_source_location_in_string()
     flb_destroy(ctx);
 }
 
-void flb_test_source_location_partial_subfields()
+void flb_test_source_location_partial_subfields(void)
 {
     int ret;
     int size = sizeof(PARTIAL_SOURCELOCATION) - 1;
@@ -5363,7 +5363,7 @@ void flb_test_source_location_partial_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_source_location_incorrect_type_subfields()
+void flb_test_source_location_incorrect_type_subfields(void)
 {
     int ret;
     int size = sizeof(SOURCELOCATION_SUBFIELDS_IN_INCORRECT_TYPE) - 1;
@@ -5403,7 +5403,7 @@ void flb_test_source_location_incorrect_type_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_source_location_extra_subfields()
+void flb_test_source_location_extra_subfields(void)
 {
     int ret;
     int size = sizeof(SOURCELOCATION_EXTRA_SUBFIELDS_EXISTED) - 1;
@@ -5443,7 +5443,7 @@ void flb_test_source_location_extra_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_common_case()
+void flb_test_http_request_common_case(void)
 {
     int ret;
     int size = sizeof(HTTPREQUEST_COMMON_CASE) - 1;
@@ -5483,7 +5483,7 @@ void flb_test_http_request_common_case()
     flb_destroy(ctx);
 }
 
-void flb_test_empty_http_request()
+void flb_test_empty_http_request(void)
 {
     int ret;
     int size = sizeof(EMPTY_HTTPREQUEST) - 1;
@@ -5523,7 +5523,7 @@ void flb_test_empty_http_request()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_in_string()
+void flb_test_http_request_in_string(void)
 {
     int ret;
     int size = sizeof(HTTPREQUEST_IN_STRING) - 1;
@@ -5563,7 +5563,7 @@ void flb_test_http_request_in_string()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_partial_subfields()
+void flb_test_http_request_partial_subfields(void)
 {
     int ret;
     int size = sizeof(PARTIAL_HTTPREQUEST) - 1;
@@ -5603,7 +5603,7 @@ void flb_test_http_request_partial_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_incorrect_type_subfields()
+void flb_test_http_request_incorrect_type_subfields(void)
 {
     int ret;
     int size = sizeof(HTTPREQUEST_SUBFIELDS_IN_INCORRECT_TYPE) - 1;
@@ -5643,7 +5643,7 @@ void flb_test_http_request_incorrect_type_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_extra_subfields()
+void flb_test_http_request_extra_subfields(void)
 {
     int ret;
     int size = sizeof(HTTPREQUEST_EXTRA_SUBFIELDS_EXISTED) - 1;
@@ -5683,7 +5683,7 @@ void flb_test_http_request_extra_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_latency_common_case()
+void flb_test_http_request_latency_common_case(void)
 {
     int ret;
     int size = sizeof(HTTPREQUEST_LATENCY_COMMON_CASE) - 1;
@@ -5723,7 +5723,7 @@ void flb_test_http_request_latency_common_case()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_latency_invalid_spaces()
+void flb_test_http_request_latency_invalid_spaces(void)
 {
     int ret;
     int size = sizeof(HTTPREQUEST_LATENCY_INVALID_SPACES) - 1;
@@ -5763,7 +5763,7 @@ void flb_test_http_request_latency_invalid_spaces()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_latency_invalid_string()
+void flb_test_http_request_latency_invalid_string(void)
 {
     int ret;
     int size = sizeof(HTTPREQUEST_LATENCY_INVALID_STRING) - 1;
@@ -5803,7 +5803,7 @@ void flb_test_http_request_latency_invalid_string()
     flb_destroy(ctx);
 }
 
-void flb_test_http_request_latency_invalid_end()
+void flb_test_http_request_latency_invalid_end(void)
 {
     int ret;
     int size = sizeof(HTTPREQUEST_LATENCY_INVALID_END) - 1;
@@ -5843,7 +5843,7 @@ void flb_test_http_request_latency_invalid_end()
     flb_destroy(ctx);
 }
 
-void flb_test_timestamp_format_object_common()
+void flb_test_timestamp_format_object_common(void)
 {
     int ret;
     int size = sizeof(TIMESTAMP_FORMAT_OBJECT_COMMON_CASE) - 1;
@@ -5883,7 +5883,7 @@ void flb_test_timestamp_format_object_common()
     flb_destroy(ctx);
 }
 
-void flb_test_timestamp_format_object_not_a_map()
+void flb_test_timestamp_format_object_not_a_map(void)
 {
     int ret;
     int size = sizeof(TIMESTAMP_FORMAT_OBJECT_NOT_A_MAP) - 1;
@@ -5923,7 +5923,7 @@ void flb_test_timestamp_format_object_not_a_map()
     flb_destroy(ctx);
 }
 
-void flb_test_timestamp_format_object_missing_subfield()
+void flb_test_timestamp_format_object_missing_subfield(void)
 {
     int ret;
     int size = sizeof(TIMESTAMP_FORMAT_OBJECT_MISSING_SUBFIELD) - 1;
@@ -5963,7 +5963,7 @@ void flb_test_timestamp_format_object_missing_subfield()
     flb_destroy(ctx);
 }
 
-void flb_test_timestamp_format_object_incorrect_subfields()
+void flb_test_timestamp_format_object_incorrect_subfields(void)
 {
     int ret;
     int size = sizeof(TIMESTAMP_FORMAT_OBJECT_INCORRECT_TYPE_SUBFIELDS) - 1;
@@ -6003,7 +6003,7 @@ void flb_test_timestamp_format_object_incorrect_subfields()
     flb_destroy(ctx);
 }
 
-void flb_test_timestamp_format_duo_fields_common_case()
+void flb_test_timestamp_format_duo_fields_common_case(void)
 {
     int ret;
     int size = sizeof(TIMESTAMP_FORMAT_DUO_FIELDS_COMMON_CASE) - 1;
@@ -6043,7 +6043,7 @@ void flb_test_timestamp_format_duo_fields_common_case()
     flb_destroy(ctx);
 }
 
-void flb_test_timestamp_format_duo_fields_missing_nanos()
+void flb_test_timestamp_format_duo_fields_missing_nanos(void)
 {
     int ret;
     int size = sizeof(TIMESTAMP_FORMAT_DUO_FIELDS_MISSING_NANOS) - 1;
@@ -6083,7 +6083,7 @@ void flb_test_timestamp_format_duo_fields_missing_nanos()
     flb_destroy(ctx);
 }
 
-void flb_test_timestamp_format_duo_fields_incorrect_type()
+void flb_test_timestamp_format_duo_fields_incorrect_type(void)
 {
     int ret;
     int size = sizeof(TIMESTAMP_FORMAT_DUO_FIELDS_INCORRECT_TYPE) - 1;

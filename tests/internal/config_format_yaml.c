@@ -30,7 +30,7 @@
  */
 
 /* data/config_format/fluent-bit.yaml */
-static void test_basic()
+static void test_basic(void)
 {
     struct mk_list *head;
     struct flb_cf *cf;
@@ -142,7 +142,7 @@ static void test_basic()
 }
 
 /* https://github.com/fluent/fluent-bit/issues/7559 */
-static void test_customs_section()
+static void test_customs_section(void)
 {
     struct flb_cf *cf;
     struct flb_cf_section *s;
@@ -168,7 +168,7 @@ static void test_customs_section()
     flb_cf_destroy(cf);
 }
 
-static void test_slist_even()
+static void test_slist_even(void)
 {
     struct flb_cf *cf;
     struct flb_cf_section *s;
@@ -201,7 +201,7 @@ static void test_slist_even()
     flb_cf_destroy(cf);
 }
 
-static void test_slist_odd()
+static void test_slist_odd(void)
 {
     struct flb_cf *cf;
     struct flb_cf_section *s;
@@ -235,7 +235,7 @@ static void test_slist_odd()
 }
 
 
-static void test_parser_conf()
+static void test_parser_conf(void)
 {
     struct flb_cf *cf;
     struct flb_config *config;
@@ -298,7 +298,7 @@ static inline int check_camel_to_snake(char *input, char *output)
 }
 
 
-static void test_camel_case_key()
+static void test_camel_case_key(void)
 {
     /* normal conversion */
     TEST_CHECK(check_camel_to_snake("a", "a") == FLB_TRUE);
@@ -315,7 +315,7 @@ static void test_camel_case_key()
 }
 
 /* data/config_format/processors.yaml */
-static void test_processors()
+static void test_processors(void)
 {
     struct mk_list *head;
     struct flb_cf *cf;

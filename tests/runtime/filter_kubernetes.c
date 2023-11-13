@@ -1,10 +1,13 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_runtime.h"
+
+#ifdef FLB_HAVE_UNISTD
+
 #define _GNU_SOURCE /* for accept4 */
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
 #include <fluent-bit/flb_info.h>
-#include "flb_tests_runtime.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -380,22 +383,22 @@ exit:
 #define flb_test_core(target, suffix, nExpected) \
     kube_test("core/" target, KUBE_TAIL, suffix, nExpected, NULL);
 
-static void flb_test_core_base()
+static void flb_test_core_base(void)
 {
     flb_test_core("core_base_fluent-bit", NULL, 1);
 }
 
-static void flb_test_core_no_meta()
+static void flb_test_core_no_meta(void)
 {
     flb_test_core("core_no-meta_text", NULL, 1);
 }
 
-static void flb_test_core_unescaping_text()
+static void flb_test_core_unescaping_text(void)
 {
     flb_test_core("core_unescaping_text", NULL, 1);
 }
 
-static void flb_test_core_unescaping_json()
+static void flb_test_core_unescaping_json(void)
 {
     flb_test_core("core_unescaping_json", NULL, 1);
 }
@@ -414,12 +417,12 @@ static void flb_test_core_unescaping_json()
               NULL); \
 
 
-static void flb_test_options_use_kubelet_enabled_json()
+static void flb_test_options_use_kubelet_enabled_json(void)
 {
     flb_test_options_use_kubelet_enabled("options_use-kubelet-enabled_fluent-bit", NULL, 1);
 }
 
-static void flb_test_options_use_kubelet_disabled_json()
+static void flb_test_options_use_kubelet_disabled_json(void)
 {
     flb_test_options_use_kubelet_disabled("options_use-kubelet-disabled_fluent-bit", NULL, 1);
 }
@@ -433,22 +436,22 @@ static void flb_test_options_use_kubelet_disabled_json()
     kube_test("options/" target, KUBE_TAIL, suffix, nExpected, \
               NULL); \
 
-static void flb_test_options_merge_log_enabled_text()
+static void flb_test_options_merge_log_enabled_text(void)
 {
     flb_test_options_merge_log_enabled("options_merge-log-enabled_text", NULL, 1);
 }
 
-static void flb_test_options_merge_log_enabled_json()
+static void flb_test_options_merge_log_enabled_json(void)
 {
     flb_test_options_merge_log_enabled("options_merge-log-enabled_json", NULL, 1);
 }
 
-static void flb_test_options_merge_log_enabled_invalid_json()
+static void flb_test_options_merge_log_enabled_invalid_json(void)
 {
     flb_test_options_merge_log_enabled("options_merge-log-enabled_invalid-json", NULL, 1);
 }
 
-static void flb_test_options_merge_log_disabled_json()
+static void flb_test_options_merge_log_disabled_json(void)
 {
     flb_test_options_merge_log_disabled("options_merge-log-disabled_json", NULL, 1);
 }
@@ -464,12 +467,12 @@ static void flb_test_options_merge_log_disabled_json()
               "Merge_Log_Trim", "Off", \
               NULL); \
 
-static void flb_test_options_merge_log_trim_enabled_json()
+static void flb_test_options_merge_log_trim_enabled_json(void)
 {
     flb_test_options_merge_log_trim_enabled("options_merge-log-trim-enabled_json", NULL, 1);
 }
 
-static void flb_test_options_merge_log_trim_disabled_json()
+static void flb_test_options_merge_log_trim_disabled_json(void)
 {
     flb_test_options_merge_log_trim_disabled("options_merge-log-trim-disabled_json", NULL, 1);
 }
@@ -480,7 +483,7 @@ static void flb_test_options_merge_log_trim_disabled_json()
               "Merge_Log_Key", "merge-log-key", \
               NULL); \
 
-static void flb_test_options_merge_log_key_json()
+static void flb_test_options_merge_log_key_json(void)
 {
     flb_test_options_merge_log_key("options_merge-log-key_json", NULL, 1);
 }
@@ -496,12 +499,12 @@ static void flb_test_options_merge_log_key_json()
               "Keep_Log", "Off", \
               NULL); \
 
-static void flb_test_options_keep_log_enabled_json()
+static void flb_test_options_keep_log_enabled_json(void)
 {
     flb_test_options_keep_log_enabled("options_keep-log-enabled_json", NULL, 1);
 }
 
-static void flb_test_options_keep_log_disabled_json()
+static void flb_test_options_keep_log_disabled_json(void)
 {
     flb_test_options_keep_log_disabled("options_keep-log-disabled_json", NULL, 1);
 }
@@ -511,12 +514,12 @@ static void flb_test_options_keep_log_disabled_json()
               "Merge_Log", "On", \
               NULL); \
 
-static void flb_test_options_k8s_logging_parser_disabled_text_stdout()
+static void flb_test_options_k8s_logging_parser_disabled_text_stdout(void)
 {
     flb_test_options_k8s_logging_parser_disabled("options_k8s-logging-parser-disabled_text", "stdout", 1);
 }
 
-static void flb_test_options_k8s_logging_parser_disabled_text_stderr()
+static void flb_test_options_k8s_logging_parser_disabled_text_stderr(void)
 {
     flb_test_options_k8s_logging_parser_disabled("options_k8s-logging-parser-disabled_text", "stderr", 1);
 }
@@ -526,12 +529,12 @@ static void flb_test_options_k8s_logging_parser_disabled_text_stderr()
               "Merge_Log", "On", \
               NULL); \
 
-static void flb_test_options_k8s_logging_exclude_disabled_text_stdout()
+static void flb_test_options_k8s_logging_exclude_disabled_text_stdout(void)
 {
     flb_test_options_k8s_logging_exclude_disabled("options_k8s-logging-exclude-disabled_text", "stdout", 1);
 }
 
-static void flb_test_options_k8s_logging_exclude_disabled_text_stderr()
+static void flb_test_options_k8s_logging_exclude_disabled_text_stderr(void)
 {
     flb_test_options_k8s_logging_exclude_disabled("options_k8s-logging-exclude-disabled_text", "stderr", 1);
 }
@@ -542,7 +545,7 @@ static void flb_test_options_k8s_logging_exclude_disabled_text_stderr()
               "K8s-Logging.Exclude", "On", \
               NULL); \
 
-static void flb_test_annotations_invalid_text()
+static void flb_test_annotations_invalid_text(void)
 {
     flb_test_annotations("annotations_invalid_text", NULL, 1);
 }
@@ -554,152 +557,152 @@ static void flb_test_annotations_invalid_text()
               "Keep_Log", "Off", \
               NULL); \
 
-static void flb_test_annotations_parser_regex_with_time_text()
+static void flb_test_annotations_parser_regex_with_time_text(void)
 {
     flb_test_annotations_parser("annotations-parser_regex-with-time_text", NULL, 1);
 }
 
-static void flb_test_annotations_parser_regex_with_time_invalid_text_1()
+static void flb_test_annotations_parser_regex_with_time_invalid_text_1(void)
 {
     flb_test_annotations_parser("annotations-parser_regex-with-time_invalid-text-1", NULL, 1);
 }
 
-static void flb_test_annotations_parser_json_with_time_json()
+static void flb_test_annotations_parser_json_with_time_json(void)
 {
     flb_test_annotations_parser("annotations-parser_json-with-time_json", NULL, 1);
 }
 
-static void flb_test_annotations_parser_json_with_time_invalid_json_1()
+static void flb_test_annotations_parser_json_with_time_invalid_json_1(void)
 {
     flb_test_annotations_parser("annotations-parser_json-with-time_invalid-json-1", NULL, 1);
 }
 
-static void flb_test_annotations_parser_invalid_text_stdout()
+static void flb_test_annotations_parser_invalid_text_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_invalid_text", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_invalid_text_stderr()
+static void flb_test_annotations_parser_invalid_text_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_invalid_text", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_stdout_text_stdout()
+static void flb_test_annotations_parser_stdout_text_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_stdout_text", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_stdout_text_stderr()
+static void flb_test_annotations_parser_stdout_text_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_stdout_text", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_stderr_text_stdout()
+static void flb_test_annotations_parser_stderr_text_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_stderr_text", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_stderr_text_stderr()
+static void flb_test_annotations_parser_stderr_text_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_stderr_text", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_1_stdout()
+static void flb_test_annotations_parser_multiple_1_container_1_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-1", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_1_stderr()
+static void flb_test_annotations_parser_multiple_1_container_1_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-1", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_2_stdout()
+static void flb_test_annotations_parser_multiple_1_container_2_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-2", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_2_stderr()
+static void flb_test_annotations_parser_multiple_1_container_2_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-2", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_3_stdout()
+static void flb_test_annotations_parser_multiple_1_container_3_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-3", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_3_stderr()
+static void flb_test_annotations_parser_multiple_1_container_3_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-3", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_4_stdout()
+static void flb_test_annotations_parser_multiple_1_container_4_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-4", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_4_stderr()
+static void flb_test_annotations_parser_multiple_1_container_4_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-4", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_5_stdout()
+static void flb_test_annotations_parser_multiple_1_container_5_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-5", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_1_container_5_stderr()
+static void flb_test_annotations_parser_multiple_1_container_5_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-1_container-5", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_1_stdout()
+static void flb_test_annotations_parser_multiple_2_container_1_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-1", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_1_stderr()
+static void flb_test_annotations_parser_multiple_2_container_1_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-1", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_2_stdout()
+static void flb_test_annotations_parser_multiple_2_container_2_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-2", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_2_stderr()
+static void flb_test_annotations_parser_multiple_2_container_2_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-2", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_3_stdout()
+static void flb_test_annotations_parser_multiple_2_container_3_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-3", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_3_stderr()
+static void flb_test_annotations_parser_multiple_2_container_3_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-3", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_4_stdout()
+static void flb_test_annotations_parser_multiple_2_container_4_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-4", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_4_stderr()
+static void flb_test_annotations_parser_multiple_2_container_4_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-4", "stderr", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_5_stdout()
+static void flb_test_annotations_parser_multiple_2_container_5_stdout(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-5", "stdout", 1);
 }
 
-static void flb_test_annotations_parser_multiple_2_container_5_stderr()
+static void flb_test_annotations_parser_multiple_2_container_5_stderr(void)
 {
     flb_test_annotations_parser("annotations-parser_multiple-2_container-5", "stderr", 1);
 }
@@ -709,197 +712,197 @@ static void flb_test_annotations_parser_multiple_2_container_5_stderr()
               "K8s-Logging.Exclude", "On", \
               NULL); \
 
-static void flb_test_annotations_exclude_default_text()
+static void flb_test_annotations_exclude_default_text(void)
 {
     flb_test_annotations_exclude("annotations-exclude_default_text", NULL, 0);
 }
 
-static void flb_test_annotations_exclude_invalid_text_stdout()
+static void flb_test_annotations_exclude_invalid_text_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_invalid_text", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_invalid_text_stderr()
+static void flb_test_annotations_exclude_invalid_text_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_invalid_text", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_stdout_text_stdout()
+static void flb_test_annotations_exclude_stdout_text_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_stdout_text", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_stdout_text_stderr()
+static void flb_test_annotations_exclude_stdout_text_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_stdout_text", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_stderr_text_stdout()
+static void flb_test_annotations_exclude_stderr_text_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_stderr_text", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_stderr_text_stderr()
+static void flb_test_annotations_exclude_stderr_text_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_stderr_text", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_1_container_1_stdout()
+static void flb_test_annotations_exclude_multiple_1_container_1_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-1_container-1", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_1_container_1_stderr()
+static void flb_test_annotations_exclude_multiple_1_container_1_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-1_container-1", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_1_container_2_stdout()
+static void flb_test_annotations_exclude_multiple_1_container_2_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-1_container-2", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_1_container_2_stderr()
+static void flb_test_annotations_exclude_multiple_1_container_2_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-1_container-2", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_1_container_3_stdout()
+static void flb_test_annotations_exclude_multiple_1_container_3_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-1_container-3", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_1_container_3_stderr()
+static void flb_test_annotations_exclude_multiple_1_container_3_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-1_container-3", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_1_container_4_stdout()
+static void flb_test_annotations_exclude_multiple_1_container_4_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-1_container-4", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_1_container_4_stderr()
+static void flb_test_annotations_exclude_multiple_1_container_4_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-1_container-4", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_2_container_1_stdout()
+static void flb_test_annotations_exclude_multiple_2_container_1_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-2_container-1", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_2_container_1_stderr()
+static void flb_test_annotations_exclude_multiple_2_container_1_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-2_container-1", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_2_container_2_stdout()
+static void flb_test_annotations_exclude_multiple_2_container_2_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-2_container-2", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_2_container_2_stderr()
+static void flb_test_annotations_exclude_multiple_2_container_2_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-2_container-2", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_2_container_3_stdout()
+static void flb_test_annotations_exclude_multiple_2_container_3_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-2_container-3", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_2_container_3_stderr()
+static void flb_test_annotations_exclude_multiple_2_container_3_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-2_container-3", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_2_container_4_stdout()
+static void flb_test_annotations_exclude_multiple_2_container_4_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-2_container-4", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_2_container_4_stderr()
+static void flb_test_annotations_exclude_multiple_2_container_4_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-2_container-4", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_3_container_1_stdout()
+static void flb_test_annotations_exclude_multiple_3_container_1_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-3_container-1", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_3_container_1_stderr()
+static void flb_test_annotations_exclude_multiple_3_container_1_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-3_container-1", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_3_container_2_stdout()
+static void flb_test_annotations_exclude_multiple_3_container_2_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-3_container-2", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_3_container_2_stderr()
+static void flb_test_annotations_exclude_multiple_3_container_2_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-3_container-2", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_3_container_3_stdout()
+static void flb_test_annotations_exclude_multiple_3_container_3_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-3_container-3", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_3_container_3_stderr()
+static void flb_test_annotations_exclude_multiple_3_container_3_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-3_container-3", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_3_container_4_stdout()
+static void flb_test_annotations_exclude_multiple_3_container_4_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-3_container-4", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_3_container_4_stderr()
+static void flb_test_annotations_exclude_multiple_3_container_4_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-3_container-4", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_4_container_1_stdout()
+static void flb_test_annotations_exclude_multiple_4_container_1_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-4_container-1", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_4_container_1_stderr()
+static void flb_test_annotations_exclude_multiple_4_container_1_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-4_container-1", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_4_container_2_stdout()
+static void flb_test_annotations_exclude_multiple_4_container_2_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-4_container-2", "stdout", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_4_container_2_stderr()
+static void flb_test_annotations_exclude_multiple_4_container_2_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-4_container-2", "stderr", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_4_container_3_stdout()
+static void flb_test_annotations_exclude_multiple_4_container_3_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-4_container-3", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_4_container_3_stderr()
+static void flb_test_annotations_exclude_multiple_4_container_3_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-4_container-3", "stderr", 0);
 }
 
-static void flb_test_annotations_exclude_multiple_4_container_4_stdout()
+static void flb_test_annotations_exclude_multiple_4_container_4_stdout(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-4_container-4", "stdout", 1);
 }
 
-static void flb_test_annotations_exclude_multiple_4_container_4_stderr()
+static void flb_test_annotations_exclude_multiple_4_container_4_stderr(void)
 {
     flb_test_annotations_exclude("annotations-exclude_multiple-4_container-4", "stderr", 1);
 }
@@ -922,7 +925,7 @@ int flb_test_systemd_send()
             NULL);
 }
 
-static void flb_test_systemd_logs()
+static void flb_test_systemd_logs(void)
 {
     struct stat statb;
     /* We want to avoid possibly getting a log from a previous run,
@@ -1084,3 +1087,11 @@ TEST_LIST = {
 #endif
     {NULL, NULL}
 };
+
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

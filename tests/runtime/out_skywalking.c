@@ -22,6 +22,10 @@
 #include "flb_tests_runtime.h"
 #include "data/td/json_td.h"
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 void flb_test_sw_success(void) {
     int ret;
     flb_ctx_t *ctx;

@@ -12,7 +12,7 @@ char *morpheus = "This is your last chance. After this, there is no "
     "your bed and believe whatever you want to believe. You take the red pill,"
     "you stay in Wonderland and I show you how deep the rabbit-hole goes.";
 
-void test_compress()
+void test_compress(void)
 {
     int ret;
     int sample_len;

@@ -20,21 +20,22 @@ static void check_equals(flb_sds_t result, const char *expected)
     TEST_MSG("Actual:   %s", result);
 }
 
-static void test_file_read_text_file()
+static void test_file_read_text_file(void)
 {
     flb_sds_t result = flb_file_read(TEXT_FILE);
+
     check_equals(result, "Some text file\n\nline 3\n\nline 5\n");
     flb_sds_destroy(result);
 }
 
-static void test_file_read_empty_file()
+static void test_file_read_empty_file(void)
 {
     flb_sds_t result = flb_file_read(EMPTY_FILE);
     check_equals(result, "");
     flb_sds_destroy(result);
 }
 
-static void test_file_read_missing()
+static void test_file_read_missing(void)
 {
     flb_sds_t result = flb_file_read(TEXT_FILE ".missing");
     TEST_CHECK(result == NULL);

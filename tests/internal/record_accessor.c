@@ -72,7 +72,7 @@ static int set_str_to_msgpack_object(char *str, msgpack_object *obj)
 }
 
 
-void cb_keys()
+void cb_keys(void)
 {
     struct flb_record_accessor *ra;
 
@@ -123,7 +123,7 @@ void cb_keys()
     flb_ra_destroy(ra);
 }
 
-void cb_translate()
+void cb_translate(void)
 {
     int len;
     int ret;
@@ -196,7 +196,7 @@ void cb_translate()
     msgpack_unpacked_destroy(&result);
 }
 
-void cb_translate_tag()
+void cb_translate_tag(void)
 {
     int len;
     int ret;
@@ -251,7 +251,7 @@ void cb_translate_tag()
     msgpack_unpacked_destroy(&result);
 }
 
-void cb_dots_subkeys()
+void cb_dots_subkeys(void)
 {
     int len;
     int ret;
@@ -313,7 +313,7 @@ void cb_dots_subkeys()
     msgpack_unpacked_destroy(&result);
 }
 
-void cb_array_id()
+void cb_array_id(void)
 {
     int len;
     int ret;
@@ -381,7 +381,7 @@ void cb_array_id()
     msgpack_unpacked_destroy(&result);
 }
 
-void cb_get_kv_pair()
+void cb_get_kv_pair(void)
 {
     int len;
     int ret;
@@ -450,7 +450,7 @@ void cb_get_kv_pair()
     msgpack_unpacked_destroy(&result);
 }
 
-void cb_update_key_val()
+void cb_update_key_val(void)
 {
     int ret;
     size_t off = 0;
@@ -560,7 +560,7 @@ void cb_update_key_val()
     flb_free(out_buf);
 }
 
-void cb_update_val()
+void cb_update_val(void)
 {
     int ret;
     size_t off = 0;
@@ -645,7 +645,7 @@ void cb_update_val()
     flb_free(out_buf);
 }
 
-void cb_update_key()
+void cb_update_key(void)
 {
     int ret;
     size_t off = 0;
@@ -743,7 +743,7 @@ void cb_update_key()
     flb_free(out_buf);
 }
   
-void cb_dash_key()
+void cb_dash_key(void)
 {
     int len;
     int ret;
@@ -917,7 +917,7 @@ static int order_lookup_check(char *buf, size_t size,
     return 0;
 }
 
-void cb_key_order_lookup()
+void cb_key_order_lookup(void)
 {
     int len;
     int ret;
@@ -950,7 +950,7 @@ void cb_key_order_lookup()
     flb_free(out_buf);
 }
 
-void cb_issue_4917()
+void cb_issue_4917(void)
 {
     int len;
     int ret;
@@ -1023,7 +1023,7 @@ void cb_issue_4917()
     msgpack_unpacked_destroy(&result);
 }
 
-void cb_update_root_key()
+void cb_update_root_key(void)
 {
     int ret;
     size_t off = 0;
@@ -1121,7 +1121,7 @@ void cb_update_root_key()
     flb_free(out_buf);
 }
 
-void cb_update_root_key_val()
+void cb_update_root_key_val(void)
 {
     int ret;
     size_t off = 0;
@@ -1231,7 +1231,7 @@ void cb_update_root_key_val()
     flb_free(out_buf);
 }
 
-void cb_add_key_val()
+void cb_add_key_val(void)
 {
     int ret;
     size_t off = 0;
@@ -1335,7 +1335,7 @@ void cb_add_key_val()
     flb_free(out_buf);
 }
 
-void cb_add_root_key_val()
+void cb_add_root_key_val(void)
 {
     int ret;
     size_t off = 0;
@@ -1439,7 +1439,7 @@ void cb_add_root_key_val()
     flb_free(out_buf);
 }
 
-void cb_ra_translate_check()
+void cb_ra_translate_check(void)
 {
     int len;
     int ret;
@@ -1502,7 +1502,7 @@ void cb_ra_translate_check()
  * https://github.com/fluent/fluent-bit/issues/5936
  *  If the last nested element is an array, record accessor can't get its value.
  */
-void cb_issue_5936_last_array()
+void cb_issue_5936_last_array(void)
 {
     int len;
     int ret;
@@ -1568,7 +1568,7 @@ struct char_list_ra_str{
     char *expect;
 };
 
-void cb_ra_create_str_from_list()
+void cb_ra_create_str_from_list(void)
 {
     char *case1[] = {"a", NULL};
     char *case2[] = {"aa", "bb", "cc", NULL};
@@ -1636,7 +1636,7 @@ void cb_ra_create_str_from_list()
 /*
  * https://github.com/fluent/fluent-bit/issues/7330
  */
-void cb_issue_7330_single_char()
+void cb_issue_7330_single_char(void)
 {
     int ret;
     int type;

@@ -5,6 +5,10 @@
 /* Test data */
 #include "data/td/json_td.h" /* JSON_TD */
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 /* not a real error code, but tests that the code can respond to any error */
 #define ERROR_ACCESS_DENIED "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
                             <Error>\

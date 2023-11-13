@@ -65,7 +65,7 @@ static void cb_check_basic(void *ctx, int ffd,
     flb_sds_destroy(out_js);
 }
 
-void flb_test_basic()
+void flb_test_basic(void)
 {
     int ret;
     int size = sizeof(JSON_BASIC) - 1;
@@ -123,7 +123,7 @@ static void cb_check_labels(void *ctx, int ffd,
     flb_sds_destroy(out_js);
 }
 
-void flb_test_labels()
+void flb_test_labels(void)
 {
     int ret;
     int size = sizeof(JSON_BASIC) - 1;
@@ -183,7 +183,7 @@ static void cb_check_label_keys(void *ctx, int ffd,
 }
 
 #define JSON_LABEL_KEYS "[12345678, {\"key\":\"value\",\"foo\":\"bar\", \"data\":{\"l_key\":\"test\"}}]"
-void flb_test_label_keys()
+void flb_test_label_keys(void)
 {
     int ret;
     int size = sizeof(JSON_LABEL_KEYS) - 1;
@@ -242,7 +242,7 @@ static void cb_check_line_format(void *ctx, int ffd,
     flb_sds_destroy(out_js);
 }
 
-void flb_test_line_format()
+void flb_test_line_format(void)
 {
     int ret;
     int size = sizeof(JSON_BASIC) - 1;
@@ -304,7 +304,7 @@ static void cb_check_line_format_remove_keys(void *ctx, int ffd,
 }
 #define JSON_BASIC_NEST "[12345678, {\"key\": {\"nest\":\"value_nested\"}} ]"
 /* https://github.com/fluent/fluent-bit/issues/3875 */
-void flb_test_remove_map()
+void flb_test_remove_map(void)
 {
     int ret;
     int size = sizeof(JSON_BASIC_NEST) - 1;
@@ -364,7 +364,7 @@ static void cb_check_labels_ra(void *ctx, int ffd,
 }
 
 /* https://github.com/fluent/fluent-bit/issues/3867 */
-void flb_test_labels_ra()
+void flb_test_labels_ra(void)
 {
     int ret;
     int size = sizeof(JSON_LABEL_KEYS) - 1;
@@ -426,7 +426,7 @@ static void cb_check_remove_keys(void *ctx, int ffd,
     flb_sds_destroy(out_js);
 }
 
-void flb_test_remove_keys()
+void flb_test_remove_keys(void)
 {
     int ret;
     int size = sizeof(JSON_LABEL_KEYS) - 1;
@@ -495,7 +495,7 @@ static void cb_check_label_map_path(void *ctx, int ffd,
     flb_sds_destroy(out_log);
 }
 
-void flb_test_label_map_path()
+void flb_test_label_map_path(void)
 {
     int ret;
     char *str = "[12345678, {\"kubernetes\":{\"container_name\":\"promtail\",\"pod_name\":\"promtail-xxx\",\"namespace_name\":\"prod\",\"labels\":{\"team\": \"lalala\"}},\"log\":\"log\"}]";
@@ -564,7 +564,7 @@ static void cb_check_float_value(void *ctx, int ffd,
 }
 
 #define JSON_FLOAT "[12345678, {\"float\":1.3}]"
-void flb_test_float_value()
+void flb_test_float_value(void)
 {
     int ret;
     int size = sizeof(JSON_FLOAT) - 1;

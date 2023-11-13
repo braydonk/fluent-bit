@@ -1,5 +1,9 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_internal.h"
+
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit/flb_sds.h>
 #include <fluent-bit/flb_aws_credentials.h>
 #include <fluent-bit/flb_mem.h>
@@ -9,8 +13,6 @@
 #include <monkey/mk_core.h>
 #include <string.h>
 #include <unistd.h>
-
-#include "flb_tests_internal.h"
 
 #define ACCESS_KEY_HTTP "http_akid"
 #define SECRET_KEY_HTTP "http_skid"
@@ -170,7 +172,7 @@ struct flb_aws_client_generator *generator_in_test()
 }
 
 /* http and ecs providers */
-static void test_http_provider()
+static void test_http_provider(void)
 {
     struct flb_aws_provider *provider;
     struct flb_aws_credentials *creds;
@@ -249,7 +251,7 @@ static void test_http_provider()
     flb_config_exit(config);
 }
 
-static void test_http_provider_error_case()
+static void test_http_provider_error_case(void)
 {
     struct flb_aws_provider *provider;
     struct flb_aws_credentials *creds;
@@ -310,7 +312,7 @@ static void test_http_provider_error_case()
     flb_config_exit(config);
 }
 
-static void test_http_provider_malformed_response()
+static void test_http_provider_malformed_response(void)
 {
     struct flb_aws_provider *provider;
     struct flb_aws_credentials *creds;
@@ -380,3 +382,11 @@ TEST_LIST = {
     test_http_provider_malformed_response},
     { 0 }
 };
+
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

@@ -5,6 +5,10 @@
 #include <fluent-bit/flb_mem.h>
 #include <fluent-bit/flb_pthread.h>
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 #include "flb_tests_internal.h"
 
 #define S3_KEY_FORMAT_TAG_PART "logs/$TAG[2]/$TAG[0]/%Y/%m/%d"
@@ -120,7 +124,7 @@ static int mktime_utc(struct tm *day, time_t *tm)
     return ret;
 }
 
-static void test_flb_aws_error()
+static void test_flb_aws_error(void)
 {
     flb_sds_t error_type;
     char *api_response =  "{\"__type\":\"IncompleteSignatureException\","
@@ -144,7 +148,7 @@ static void test_flb_aws_error()
     flb_sds_destroy(error_type);
 }
 
-static void test_flb_aws_endpoint()
+static void test_flb_aws_endpoint(void)
 {
     char *endpoint;
 
@@ -165,7 +169,7 @@ static void test_flb_aws_endpoint()
 
 }
 
-static void test_flb_get_s3_key_multi_tag_exists()
+static void test_flb_get_s3_key_multi_tag_exists(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -180,7 +184,7 @@ static void test_flb_get_s3_key_multi_tag_exists()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_full_tag()
+static void test_flb_get_s3_key_full_tag(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -195,7 +199,7 @@ static void test_flb_get_s3_key_full_tag()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_tag_special_characters()
+static void test_flb_get_s3_key_tag_special_characters(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -211,7 +215,7 @@ static void test_flb_get_s3_key_tag_special_characters()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_multi_tag_delimiter()
+static void test_flb_get_s3_key_multi_tag_delimiter(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -227,7 +231,7 @@ static void test_flb_get_s3_key_multi_tag_delimiter()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_invalid_tag_delimiter()
+static void test_flb_get_s3_key_invalid_tag_delimiter(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -243,7 +247,7 @@ static void test_flb_get_s3_key_invalid_tag_delimiter()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_invalid_tag_index()
+static void test_flb_get_s3_key_invalid_tag_index(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -258,7 +262,7 @@ static void test_flb_get_s3_key_invalid_tag_index()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_invalid_key_length()
+static void test_flb_get_s3_key_invalid_key_length(void)
 {
     int i;
     char buf[1100] = "";
@@ -281,7 +285,7 @@ static void test_flb_get_s3_key_invalid_key_length()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_static_string()
+static void test_flb_get_s3_key_static_string(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -297,7 +301,7 @@ static void test_flb_get_s3_key_static_string()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_valid_index()
+static void test_flb_get_s3_key_valid_index(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -313,7 +317,7 @@ static void test_flb_get_s3_key_valid_index()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_increment_index()
+static void test_flb_get_s3_key_increment_index(void)
 {
     struct tm day = { 0, 0, 0, 15, 7, 120};
     time_t t;
@@ -337,7 +341,7 @@ static void test_flb_get_s3_key_increment_index()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_index_overflow()
+static void test_flb_get_s3_key_index_overflow(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -360,7 +364,8 @@ static void test_flb_get_s3_key_index_overflow()
     flb_sds_destroy(s3_key_format);
 }
 
-static void test_flb_get_s3_key_mixed_timestamp()
+#ifndef _WIN32
+static void test_flb_get_s3_key_mixed_timestamp(void)
 {
     flb_sds_t s3_key_format = NULL;
     struct tm day = { 0, 0, 0, 15, 7, 120};
@@ -375,6 +380,7 @@ static void test_flb_get_s3_key_mixed_timestamp()
 
     flb_sds_destroy(s3_key_format);
 }
+#endif
 
 TEST_LIST = {
     { "parse_api_error" , test_flb_aws_error},
@@ -390,6 +396,8 @@ TEST_LIST = {
     {"flb_get_s3_key_valid_index", test_flb_get_s3_key_valid_index},
     {"flb_get_s3_key_increment_index", test_flb_get_s3_key_increment_index},
     {"flb_get_s3_key_index_overflow", test_flb_get_s3_key_index_overflow},
+    #ifndef _WIN32
     {"flb_get_s3_key_mixed_timestamp", test_flb_get_s3_key_mixed_timestamp},
+    #endif
     { 0 }
 };

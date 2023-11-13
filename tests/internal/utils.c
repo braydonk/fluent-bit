@@ -38,7 +38,7 @@ struct url_check url_checks[] = {
     {-1, "://", NULL, NULL, NULL, NULL},
 };
 
-void test_url_split()
+void test_url_split(void)
 {
     int i;
     int ret;
@@ -168,7 +168,7 @@ static void write_str_test_cases_w_buf_size(struct write_str_case *cases, int bu
     flb_free(buf);
 }
 
-void test_write_str()
+void test_write_str(void)
 {
     char buf[10];
     char japanese_a[4] = {0xe3, 0x81, 0x82};
@@ -203,7 +203,7 @@ void test_write_str()
     TEST_CHECK(ret == FLB_FALSE);
 }
 
-void test_write_str_invalid_trailing_bytes()
+void test_write_str_invalid_trailing_bytes(void)
 {
     struct write_str_case cases[] = {
         /* Invalid unicode (one bad trailing bytes) */
@@ -229,7 +229,7 @@ void test_write_str_invalid_trailing_bytes()
     write_str_test_cases(cases);
 }
 
-void test_write_str_invalid_leading_byte()
+void test_write_str_invalid_leading_byte(void)
 {
 
     struct write_str_case cases[] = {
@@ -272,7 +272,7 @@ void test_write_str_invalid_leading_byte()
     write_str_test_cases(cases);
 }
 
-void test_write_str_invalid_leading_byte_case_2()
+void test_write_str_invalid_leading_byte_case_2(void)
 {
 
     struct write_str_case cases[] = {
@@ -305,7 +305,7 @@ void test_write_str_invalid_leading_byte_case_2()
     write_str_test_cases(cases);
 }
 
-void test_write_str_edge_cases()
+void test_write_str_edge_cases(void)
 {
     struct write_str_case cases[] = {
         /* Invalid unicode (one bad leading byte) */
@@ -320,7 +320,7 @@ void test_write_str_edge_cases()
     write_str_test_cases(cases);
 }
 
-void test_write_str_buffer_overrun()
+void test_write_str_buffer_overrun(void)
 {
     struct write_str_case cases[] = {
         {
@@ -384,7 +384,7 @@ struct proxy_url_check proxy_url_checks[] = {
 
 };
 
-void test_proxy_url_split() {
+void test_proxy_url_split(void) {
     int i;
     int ret;
     int size;
@@ -530,7 +530,7 @@ static int compare_split_entry(const char* input, int separator, int max_split, 
     return 0;
 }
 
-void test_flb_utils_split()
+void test_flb_utils_split(void)
 {
     compare_split_entry("aa,bb", ',', 2, FLB_FALSE, "aa","bb" );
     compare_split_entry("localhost:12345", ':', 2, FLB_FALSE, "localhost","12345" );
@@ -562,7 +562,7 @@ void test_flb_utils_split()
     compare_split_entry("aa \"bb cc\" dd", ' ', 256, FLB_FALSE, "aa", "\"bb", "cc\"", "dd");
 }
 
-void test_flb_utils_split_quoted()
+void test_flb_utils_split_quoted(void)
 {
    /* Tokens quoted with "..." */
     compare_split_entry("aa \"double quote\" bb", ' ', 256, FLB_TRUE, "aa", "double quote", "bb");
@@ -595,7 +595,7 @@ void test_flb_utils_split_quoted()
 
 }
 
-void test_flb_utils_split_quoted_errors()
+void test_flb_utils_split_quoted_errors(void)
 {
     struct mk_list *split = NULL;
 

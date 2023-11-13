@@ -2,6 +2,10 @@
 #include <fluent-bit.h>
 #include "flb_tests_runtime.h"
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 /* Test data */
 #include "data/td/json_td.h" /* JSON_TD */
 

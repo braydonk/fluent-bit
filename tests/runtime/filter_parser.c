@@ -76,7 +76,7 @@ void wait_with_timeout(uint32_t timeout_ms, char **out_result)
 }
 
 
-void flb_test_filter_parser_extract_fields()
+void flb_test_filter_parser_extract_fields(void)
 {
     int ret;
     int bytes;
@@ -163,7 +163,7 @@ void flb_test_filter_parser_extract_fields()
     flb_destroy(ctx);
 }
 
-void flb_test_filter_parser_reserve_data_off()
+void flb_test_filter_parser_reserve_data_off(void)
 {
     int ret;
     int bytes;
@@ -240,7 +240,7 @@ void flb_test_filter_parser_reserve_data_off()
     flb_destroy(ctx);
 }
 
-void flb_test_filter_parser_handle_time_key()
+void flb_test_filter_parser_handle_time_key(void)
 {
     int ret;
     int bytes;
@@ -400,7 +400,7 @@ void flb_test_filter_parser_handle_time_key_with_fractional_timestamp()
     flb_destroy(ctx);
 }
 
-void flb_test_filter_parser_handle_time_key_with_time_zone()
+void flb_test_filter_parser_handle_time_key_with_time_zone(void)
 {
     int ret;
     int bytes;
@@ -491,7 +491,7 @@ void flb_test_filter_parser_handle_time_key_with_time_zone()
     flb_destroy(ctx);
 }
 
-void flb_test_filter_parser_ignore_malformed_time()
+void flb_test_filter_parser_ignore_malformed_time(void)
 {
     int ret;
     int bytes;
@@ -570,7 +570,7 @@ void flb_test_filter_parser_ignore_malformed_time()
     flb_destroy(ctx);
 }
 
-void flb_test_filter_parser_preserve_original_field()
+void flb_test_filter_parser_preserve_original_field(void)
 {
     int ret;
     int bytes;
@@ -655,7 +655,7 @@ void flb_test_filter_parser_preserve_original_field()
 }
 
 // https://github.com/fluent/fluent-bit/issues/2250
-void flb_test_filter_parser_first_matched_when_mutilple_parser()
+void flb_test_filter_parser_first_matched_when_mutilple_parser(void)
 {
     int ret;
     int bytes;
@@ -742,7 +742,7 @@ void flb_test_filter_parser_first_matched_when_mutilple_parser()
 
 // https://github.com/fluent/fluent-bit/issues/1486
 // https://github.com/fluent/fluent-bit/issues/2939
-void flb_test_filter_parser_skip_empty_values_false()
+void flb_test_filter_parser_skip_empty_values_false(void)
 {
     int ret;
     int bytes;

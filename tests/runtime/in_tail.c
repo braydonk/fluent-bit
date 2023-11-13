@@ -22,6 +22,10 @@
 Approach for this tests is basing on filter_kubernetes tests
 */
 
+#include "flb_tests_runtime.h"
+
+#ifndef _WIN32
+
 #include <fluent-bit.h>
 #include <fluent-bit/flb_time.h>
 #include <fluent-bit/flb_pthread.h>
@@ -31,7 +35,6 @@ Approach for this tests is basing on filter_kubernetes tests
 #include <sys/types.h>
 #include <fcntl.h>
 #include <string.h>
-#include "flb_tests_runtime.h"
 
 #define NEW_LINE "\n"
 #define PATH_SEPARATOR "/"
@@ -524,33 +527,33 @@ void do_test(char *system, const char *target, int tExpected, int nExpected, ...
     }
 }
 
-void flb_test_in_tail_dockermode()
+void flb_test_in_tail_dockermode(void)
 {
     do_test("tail", "dockermode", 20000, 3,
             NULL);
 }
 
-void flb_test_in_tail_dockermode_splitted_line()
+void flb_test_in_tail_dockermode_splitted_line(void)
 {
     do_test("tail", "dockermode_splitted_line", 20000, 2,
             NULL);
 }
 
-void flb_test_in_tail_dockermode_multiple_lines()
+void flb_test_in_tail_dockermode_multiple_lines(void)
 {
     do_test("tail", "dockermode_multiple_lines", 20000, 2,
             "Docker_Mode_Parser", "docker_multiline",
             NULL);
 }
 
-void flb_test_in_tail_dockermode_splitted_multiple_lines()
+void flb_test_in_tail_dockermode_splitted_multiple_lines(void)
 {
     do_test("tail", "dockermode_splitted_multiple_lines", 20000, 2,
             "Docker_Mode_Parser", "docker_multiline",
             NULL);
 }
 
-void flb_test_in_tail_dockermode_firstline_detection()
+void flb_test_in_tail_dockermode_firstline_detection(void)
 {
     do_test("tail", "dockermode_firstline_detection", 20000, 5,
             "Docker_Mode_Parser", "docker_multiline",
@@ -757,7 +760,7 @@ void flb_test_in_tail_issue_3943()
     }
 }
 
-void flb_test_in_tail_multiline_json_and_regex()
+void flb_test_in_tail_multiline_json_and_regex(void)
 {
     int64_t ret;
     int in_ffd;
@@ -1581,3 +1584,11 @@ TEST_LIST = {
 #endif
     {NULL, NULL}
 };
+
+#else
+
+TEST_LIST = {
+    {NULL, NULL}
+};
+
+#endif /* _WIN32 */

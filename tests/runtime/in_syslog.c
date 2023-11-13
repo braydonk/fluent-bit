@@ -18,6 +18,10 @@
  *  limitations under the License.
  */
 
+#include "flb_tests_runtime.h"
+
+#ifndef _WIN32
+
 #include <fluent-bit.h>
 #include <fluent-bit/flb_compat.h>
 #include <fluent-bit/flb_time.h>
@@ -30,7 +34,6 @@
 #include <sys/un.h>
 #endif
 #include <fcntl.h>
-#include "flb_tests_runtime.h"
 
 #define DPATH            FLB_TESTS_DATA_PATH "/data/common"
 
@@ -305,7 +308,7 @@ static int init_udp(char *in_host, int in_port, struct sockaddr_in *addr)
     return fd;
 }
 
-void flb_test_syslog_tcp()
+void flb_test_syslog_tcp(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -370,7 +373,7 @@ void flb_test_syslog_tcp()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_syslog_tcp_port()
+void flb_test_syslog_tcp_port(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -437,7 +440,7 @@ void flb_test_syslog_tcp_port()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_syslog_tcp_source_address()
+void flb_test_syslog_tcp_source_address(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -503,7 +506,7 @@ void flb_test_syslog_tcp_source_address()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_syslog_unknown_mode()
+void flb_test_syslog_unknown_mode(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -543,7 +546,7 @@ void flb_test_syslog_unknown_mode()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_syslog_unix_perm()
+void flb_test_syslog_unix_perm(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -598,7 +601,7 @@ void flb_test_syslog_unix_perm()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_syslog_udp()
+void flb_test_syslog_udp(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -664,7 +667,7 @@ void flb_test_syslog_udp()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_syslog_udp_port()
+void flb_test_syslog_udp_port(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -732,7 +735,7 @@ void flb_test_syslog_udp_port()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_syslog_udp_source_address()
+void flb_test_syslog_udp_source_address(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -800,7 +803,7 @@ void flb_test_syslog_udp_source_address()
 }
 
 #ifdef FLB_HAVE_UNIX_SOCKET
-void flb_test_syslog_tcp_unix()
+void flb_test_syslog_tcp_unix(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -867,7 +870,7 @@ void flb_test_syslog_tcp_unix()
     test_ctx_destroy(ctx);
 }
 
-void flb_test_syslog_udp_unix()
+void flb_test_syslog_udp_unix(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -935,7 +938,7 @@ void flb_test_syslog_udp_unix()
 }
 #endif
 
-void flb_test_syslog_rfc3164()
+void flb_test_syslog_rfc3164(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -1021,3 +1024,10 @@ TEST_LIST = {
     {NULL, NULL}
 };
 
+#else
+
+TEST_LIST = {
+    {NULL, NULL}
+};
+
+#endif /* _WIN32 */

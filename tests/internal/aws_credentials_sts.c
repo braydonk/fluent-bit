@@ -1,5 +1,9 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_internal.h"
+
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit/flb_sds.h>
 #include <fluent-bit/flb_aws_credentials.h>
 #include <fluent-bit/flb_mem.h>
@@ -9,8 +13,6 @@
 #include <monkey/mk_core.h>
 #include <string.h>
 #include <unistd.h>
-
-#include "flb_tests_internal.h"
 
 #define EKS_ACCESS_KEY "eks_akid"
 #define EKS_SECRET_KEY "eks_skid"
@@ -358,7 +360,7 @@ static void unsetenv_eks()
     }
 }
 
-static void test_flb_sts_session_name()
+static void test_flb_sts_session_name(void)
 {
     char *session_name = flb_sts_session_name();
 
@@ -367,7 +369,7 @@ static void test_flb_sts_session_name()
     flb_free(session_name);
 }
 
-static void test_sts_uri()
+static void test_sts_uri(void)
 {
     flb_sds_t uri;
 
@@ -379,7 +381,7 @@ static void test_sts_uri()
     flb_sds_destroy(uri);
 }
 
-static void test_process_sts_response()
+static void test_process_sts_response(void)
 {
     struct flb_aws_credentials *creds;
     struct flb_config *config;
@@ -400,7 +402,7 @@ static void test_process_sts_response()
     flb_config_exit(config);
 }
 
-static void test_eks_provider() {
+static void test_eks_provider(void) {
     struct flb_config *config;
     struct flb_aws_provider *provider;
     struct flb_aws_credentials *creds;
@@ -479,7 +481,7 @@ static void test_eks_provider() {
     flb_config_exit(config);
 }
 
-static void test_eks_provider_random_session_name() {
+static void test_eks_provider_random_session_name(void) {
     struct flb_config *config;
     struct flb_aws_provider *provider;
     struct flb_aws_credentials *creds;
@@ -555,7 +557,7 @@ static void test_eks_provider_random_session_name() {
 }
 
 /* unexpected output test- see description for STS_RESPONSE_MALFORMED */
-static void test_eks_provider_unexpected_api_response() {
+static void test_eks_provider_unexpected_api_response(void) {
     struct flb_config *config;
     struct flb_aws_provider *provider;
     struct flb_aws_credentials *creds;
@@ -611,7 +613,7 @@ static void test_eks_provider_unexpected_api_response() {
     flb_config_exit(config);
 }
 
-static void test_eks_provider_api_error() {
+static void test_eks_provider_api_error(void) {
     struct flb_config *config;
     struct flb_aws_provider *provider;
     struct flb_aws_credentials *creds;
@@ -667,7 +669,7 @@ static void test_eks_provider_api_error() {
     flb_config_exit(config);
 }
 
-static void test_sts_provider() {
+static void test_sts_provider(void) {
     struct flb_config *config;
     struct flb_aws_provider *provider;
     struct flb_aws_provider *base_provider;
@@ -762,7 +764,7 @@ static void test_sts_provider() {
     flb_config_exit(config);
 }
 
-static void test_sts_provider_api_error() {
+static void test_sts_provider_api_error(void) {
     struct flb_config *config;
     struct flb_aws_provider *provider;
     struct flb_aws_provider *base_provider;
@@ -841,7 +843,7 @@ static void test_sts_provider_api_error() {
 }
 
 /* unexpected output test- see description for STS_RESPONSE_MALFORMED */
-static void test_sts_provider_unexpected_api_response() {
+static void test_sts_provider_unexpected_api_response(void) {
     struct flb_config *config;
     struct flb_aws_provider *provider;
     struct flb_aws_provider *base_provider;
@@ -937,3 +939,11 @@ TEST_LIST = {
     test_sts_provider_unexpected_api_response},
     { 0 }
 };
+
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

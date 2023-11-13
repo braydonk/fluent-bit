@@ -76,7 +76,7 @@ int test_ctx_destroy(struct test_ctx* ctx)
     return 0;
 }
 
-void test_http_buffer_increase()
+void test_http_buffer_increase(void)
 {
     int ret;
     size_t s;
@@ -138,7 +138,7 @@ void test_http_buffer_increase()
     test_ctx_destroy(ctx);
 }
 
-void test_http_add_get_header()
+void test_http_add_get_header(void)
 {
     struct test_ctx *ctx;
     struct flb_http_client *c;
@@ -197,7 +197,7 @@ void test_http_add_get_header()
     test_ctx_destroy(ctx);
 }
 
-void test_http_set_keepalive()
+void test_http_set_keepalive(void)
 {
     struct test_ctx *ctx;
     struct flb_http_client *c;
@@ -240,7 +240,7 @@ void test_http_set_keepalive()
     test_ctx_destroy(ctx);
 }
 
-void test_http_strip_port_from_host()
+void test_http_strip_port_from_host(void)
 {
     struct test_ctx *ctx;
     struct flb_http_client *c;
@@ -299,7 +299,7 @@ void test_http_strip_port_from_host()
     test_ctx_destroy(ctx);
 }
 
-void test_http_encoding_gzip()
+void test_http_encoding_gzip(void)
 {
     struct test_ctx *ctx;
     struct flb_http_client *c;
@@ -354,7 +354,7 @@ void test_http_encoding_gzip()
     test_ctx_destroy(ctx);
 }
 
-void test_http_add_basic_auth_header()
+void test_http_add_basic_auth_header(void)
 {
     struct test_ctx *ctx;
     struct flb_http_client *c;
@@ -410,7 +410,7 @@ void test_http_add_basic_auth_header()
     test_ctx_destroy(ctx);
 }
 
-void test_http_add_proxy_auth_header()
+void test_http_add_proxy_auth_header(void)
 {
     struct test_ctx *ctx;
     struct flb_http_client *c;

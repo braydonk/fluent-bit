@@ -240,7 +240,7 @@ static void cb_check_id_key(void *ctx, int ffd,
     flb_sds_destroy(res_data);
 }
 
-void flb_test_write_operation_index()
+void flb_test_write_operation_index(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -284,7 +284,7 @@ void flb_test_write_operation_index()
     flb_destroy(ctx);
 }
 
-void flb_test_write_operation_create()
+void flb_test_write_operation_create(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -329,7 +329,7 @@ void flb_test_write_operation_create()
 }
 
 
-void flb_test_write_operation_update()
+void flb_test_write_operation_update(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -375,7 +375,7 @@ void flb_test_write_operation_update()
 }
 
 
-void flb_test_write_operation_upsert()
+void flb_test_write_operation_upsert(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -420,7 +420,7 @@ void flb_test_write_operation_upsert()
     flb_destroy(ctx);
 }
 
-void flb_test_index_type()
+void flb_test_index_type(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -465,7 +465,7 @@ void flb_test_index_type()
     flb_destroy(ctx);
 }
 
-void flb_test_index_record_accessor()
+void flb_test_index_record_accessor(void)
 {
     int ret;
     int len;
@@ -510,7 +510,7 @@ void flb_test_index_record_accessor()
     flb_destroy(ctx);
 }
 
-void flb_test_index_record_accessor_suppress_type()
+void flb_test_index_record_accessor_suppress_type(void)
 {
     int ret;
     int len;
@@ -555,7 +555,7 @@ void flb_test_index_record_accessor_suppress_type()
     flb_destroy(ctx);
 }
 
-void flb_test_index_record_accessor_with_id_key()
+void flb_test_index_record_accessor_with_id_key(void)
 {
     int ret;
     int len;
@@ -601,7 +601,7 @@ void flb_test_index_record_accessor_with_id_key()
     flb_destroy(ctx);
 }
 
-void flb_test_index_record_accessor_with_generate_id()
+void flb_test_index_record_accessor_with_generate_id(void)
 {
     int ret;
     int len;
@@ -647,7 +647,7 @@ void flb_test_index_record_accessor_with_generate_id()
     flb_destroy(ctx);
 }
 
-void flb_test_logstash_format()
+void flb_test_logstash_format(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -693,7 +693,7 @@ void flb_test_logstash_format()
     flb_destroy(ctx);
 }
 
-void flb_test_logstash_format_nanos()
+void flb_test_logstash_format_nanos(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -740,7 +740,7 @@ void flb_test_logstash_format_nanos()
     flb_destroy(ctx);
 }
 
-void flb_test_tag_key()
+void flb_test_tag_key(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -785,7 +785,7 @@ void flb_test_tag_key()
     flb_destroy(ctx);
 }
 
-void flb_test_replace_dots()
+void flb_test_replace_dots(void)
 {
     int ret;
     int size = sizeof(JSON_DOTS) - 1;
@@ -829,7 +829,7 @@ void flb_test_replace_dots()
     flb_destroy(ctx);
 }
 
-void flb_test_id_key()
+void flb_test_id_key(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;
@@ -882,7 +882,7 @@ static void cb_check_nothing(void *ctx, int ffd,
 }
 
 /* https://github.com/fluent/fluent-bit/issues/3905 */
-void flb_test_div0()
+void flb_test_div0(void)
 {
     int ret;
     char record[8000];
@@ -956,7 +956,7 @@ static void cb_check_long_index(void *ctx, int ffd,
 }
 
 /* https://github.com/fluent/fluent-bit/issues/4311 */
-void flb_test_long_index()
+void flb_test_long_index(void)
 {
     int ret;
     int size = sizeof(JSON_ES) -1;
@@ -1007,7 +1007,7 @@ void flb_test_long_index()
     flb_destroy(ctx);
 }
 
-void flb_test_logstash_prefix_separator()
+void flb_test_logstash_prefix_separator(void)
 {
     int ret;
     int size = sizeof(JSON_ES) - 1;

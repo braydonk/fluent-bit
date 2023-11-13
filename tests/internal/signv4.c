@@ -32,6 +32,10 @@
  * provides certain wrappers to validate expected results.
  */
 
+#include "flb_tests_internal.h"
+
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit/flb_info.h>
 #include <fluent-bit/flb_mem.h>
 #include <fluent-bit/flb_kv.h>
@@ -40,8 +44,6 @@
 #include <fluent-bit/flb_signv4.h>
 #include <fluent-bit/flb_aws_credentials.h>
 #include <monkey/mk_core.h>
-
-#include "flb_tests_internal.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -542,7 +544,7 @@ static struct mk_list *aws_tests_create(struct flb_config *config)
     return list;
 }
 
-static void aws_test_suite()
+static void aws_test_suite(void)
 {
     int ret;
     time_t t;
@@ -638,7 +640,7 @@ static void check_normalize(char *s, size_t len, char *out)
     flb_sds_destroy(o);
 }
 
-void normalize()
+void normalize(void)
 {
     /* get-relative */
     check_normalize("/example/..", 11, "/");
@@ -664,3 +666,11 @@ TEST_LIST = {
     { "normalize", normalize},
     { 0 }
 };
+
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

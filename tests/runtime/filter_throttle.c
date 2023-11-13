@@ -1,7 +1,10 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
-#include <fluent-bit.h>
 #include "flb_tests_runtime.h"
+
+#ifndef _WIN32
+
+#include <fluent-bit.h>
 
 /* Test data */
 
@@ -103,3 +106,11 @@ void flb_test_filter_window_0(void)
     flb_stop(ctx);
     flb_destroy(ctx);
 }
+
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif

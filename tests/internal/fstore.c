@@ -37,7 +37,7 @@
 #define FSF_STORE_PATH "/tmp/flb-fstore"
 #endif
 
-void cb_all()
+void cb_all(void)
 {
     int ret;
     void *out_buf;

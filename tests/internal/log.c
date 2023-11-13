@@ -37,7 +37,7 @@ static int update_and_check_interval(int timeout, int ret, int *interval)
     return ret_val;
 }
 
-static void cache_basic_timeout()
+static void cache_basic_timeout(void)
 {
     int i;
     int ret;
@@ -112,7 +112,7 @@ static void cache_basic_timeout()
     flb_log_cache_destroy(cache);
 }
 
-static void cache_one_slot()
+static void cache_one_slot(void)
 {
     int i;
     int ret_1;

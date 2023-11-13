@@ -4,6 +4,10 @@
 #include <fluent-bit/flb_sds.h>
 #include "flb_tests_runtime.h"
 
+#ifdef _WIN32
+#include "../include/win32/setenv.h"
+#endif
+
 #define ERROR_RESPONSE "NOT FOUND"
 
 
@@ -111,7 +115,7 @@ static void filter_test_destroy(struct filter_test *ctx)
     flb_free(ctx);
 }
 
-static void flb_test_ecs_filter()
+static void flb_test_ecs_filter(void)
 {
     int len;
     int ret;
@@ -164,7 +168,7 @@ static void flb_test_ecs_filter()
  * First release of ECS filter could crash
  * when saving that it faild to get metadata for a tag
  */
-static void flb_test_ecs_filter_mark_tag_failed()
+static void flb_test_ecs_filter_mark_tag_failed(void)
 {
     int len;
     int ret;
@@ -232,7 +236,7 @@ static void flb_test_ecs_filter_mark_tag_failed()
     filter_test_destroy(ctx);
 }
 
-static void flb_test_ecs_filter_no_prefix()
+static void flb_test_ecs_filter_no_prefix(void)
 {
     int len;
     int ret;
@@ -281,7 +285,7 @@ static void flb_test_ecs_filter_no_prefix()
     filter_test_destroy(ctx);
 }
 
-static void flb_test_ecs_filter_cluster_metadata_only()
+static void flb_test_ecs_filter_cluster_metadata_only(void)
 {
     int len;
     int ret;
@@ -332,7 +336,7 @@ static void flb_test_ecs_filter_cluster_metadata_only()
     filter_test_destroy(ctx);
 }
 
-static void flb_test_ecs_filter_cluster_error()
+static void flb_test_ecs_filter_cluster_error(void)
 {
     int len;
     int ret;
@@ -382,7 +386,7 @@ static void flb_test_ecs_filter_cluster_error()
     filter_test_destroy(ctx);
 }
 
-static void flb_test_ecs_filter_task_error()
+static void flb_test_ecs_filter_task_error(void)
 {
     int len;
     int ret;

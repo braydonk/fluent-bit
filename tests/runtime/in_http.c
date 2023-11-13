@@ -210,7 +210,7 @@ static void test_ctx_destroy(struct test_ctx *ctx)
     flb_free(ctx);
 }
 
-void flb_test_http()
+void flb_test_http(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;
@@ -351,17 +351,17 @@ void flb_test_http_successful_response_code(char *response_code)
     test_ctx_destroy(ctx);
 }
 
-void flb_test_http_successful_response_code_200()
+void flb_test_http_successful_response_code_200(void)
 {
     flb_test_http_successful_response_code("200");    
 }
 
-void flb_test_http_successful_response_code_204()
+void flb_test_http_successful_response_code_204(void)
 {
     flb_test_http_successful_response_code("204");    
 }
 
-void flb_test_http_tag_key()
+void flb_test_http_tag_key(void)
 {
     struct flb_lib_out_cb cb_data;
     struct test_ctx *ctx;

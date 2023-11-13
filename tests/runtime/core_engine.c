@@ -18,12 +18,14 @@
  *  limitations under the License.
  */
 
+#include "flb_tests_runtime.h"
+
+#ifdef FLB_HAVE_UNISTD
+
 #include <fluent-bit.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-
-#include "flb_tests_runtime.h"
 
 /* Test data*/
 
@@ -132,7 +134,7 @@ int check_routing(const char* tag,
     return 0;
 }
 
-void flb_test_engine_wildcard(void)
+void flb_test_engine_wildcard(voidvoid)
 {
     struct test_wildcard_fmt {
         const char* tag;
@@ -165,3 +167,11 @@ void flb_test_engine_wildcard(void)
         i++;
     }
 }
+
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* FLB_HAVE_UNISTD */

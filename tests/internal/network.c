@@ -1,5 +1,9 @@
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include "flb_tests_internal.h"
+
+#ifndef _WIN32
+
 #include <fluent-bit/flb_info.h>
 #include <fluent-bit/flb_mem.h>
 #include <fluent-bit/flb_parser.h>
@@ -9,7 +13,6 @@
 #include <fluent-bit/flb_time.h>
 
 #include <time.h>
-#include "flb_tests_internal.h"
 
 #define TEST_HOSTv4           "127.0.0.1"
 #define TEST_HOSTv6           "::1"
@@ -147,12 +150,12 @@ static void test_client_server(int is_ipv6)
     }
 }
 
-void test_ipv4_client_server()
+void test_ipv4_client_server(void)
 {
     test_client_server(FLB_FALSE);
 }
 
-void test_ipv6_client_server()
+void test_ipv6_client_server(void)
 {
     test_client_server(FLB_TRUE);
 }
@@ -162,3 +165,11 @@ TEST_LIST = {
     { "ipv6_client_server", test_ipv6_client_server},
     { 0 }
 };
+
+#else
+
+TEST_LIST = {
+    { 0 }
+};
+
+#endif /* _WIN32 */

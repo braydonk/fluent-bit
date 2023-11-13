@@ -16,7 +16,7 @@
 #define FLB_YAML    FLB_TESTS_DATA_PATH "/data/reload/yaml/processor.yaml"
 #define FLB_CLASSIC FLB_TESTS_DATA_PATH "/data/reload/fluent-bit.conf"
 
-void test_reconstruct_cf()
+void test_reconstruct_cf(void)
 {
     struct flb_cf *cf;
     struct flb_cf_section *s_tmp;
@@ -102,7 +102,7 @@ void test_reconstruct_cf()
 }
 
 /* data/reload/fluent-bit.conf */
-void test_reload()
+void test_reload(void)
 {
     struct flb_cf *cf = NULL;
     struct flb_cf *cf_opts;
@@ -171,7 +171,7 @@ void test_reload()
 }
 
 /* data/reload/yaml/processor.yaml */
-void test_reload_yaml()
+void test_reload_yaml(void)
 {
     struct flb_cf *cf = NULL;
     struct flb_cf *cf_opts;

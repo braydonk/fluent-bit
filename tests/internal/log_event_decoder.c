@@ -43,7 +43,7 @@ static int pack_event_time(msgpack_packer *pck, struct flb_time *tm)
     return 0;
 }
 
-void create_destroy()
+void create_destroy(void)
 {
     struct flb_log_event_decoder *dec = NULL;
     char buf[256] = {0};
@@ -57,7 +57,7 @@ void create_destroy()
     flb_log_event_decoder_destroy(dec);
 }
 
-void init_destroy()
+void init_destroy(void)
 {
     struct flb_log_event_decoder dec;
     char buf[256] = {0};
@@ -73,7 +73,7 @@ void init_destroy()
     flb_log_event_decoder_destroy(&dec);
 }
 
-void decode_timestamp()
+void decode_timestamp(void)
 {
     struct flb_time tm;
     msgpack_sbuffer sbuf;
@@ -127,7 +127,7 @@ void decode_timestamp()
     msgpack_sbuffer_destroy(&sbuf);
 }
 
-void decode_object()
+void decode_object(void)
 {
     struct flb_log_event_decoder dec;
     struct flb_log_event event;
@@ -199,7 +199,7 @@ void decode_object()
     msgpack_sbuffer_destroy(&sbuf);
 }
 
-void decoder_next()
+void decoder_next(void)
 {
     struct flb_log_event_decoder dec;
     struct flb_log_event event;

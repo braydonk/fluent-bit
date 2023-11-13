@@ -25,7 +25,7 @@ struct check route_checks[] = {
     {"test"           , "test"       , FLB_TRUE}
 };
 
-void test_router_wildcard()
+void test_router_wildcard(void)
 {
     int i;
     int ret;
